@@ -1,111 +1,64 @@
 package com.angelfish.multiplayer.activity;
 
-import android.Manifest;
-import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.RadioGroup;
-import android.widget.Toast;
 
 import com.angelfish.multiplayer.R;
-import com.angelfish.multiplayer.activity.api.ApiActivity;
-import com.angelfish.multiplayer.activity.api.PlayerActivity;
-import com.angelfish.multiplayer.activity.extend.ExtendActivity;
-import com.angelfish.multiplayer.activity.list.ListActivity;
-import com.angelfish.multiplayer.activity.pip.PIPDemoActivity;
-import com.angelfish.multiplayer.util.PIPManager;
-import com.angelfish.multiplayer.util.VideoCacheManager;
-import com.yanzhenjie.permission.AndPermission;
+import com.dueeeke.videocontroller.StandardVideoController;
+import com.dueeeke.videoplayer.player.IjkVideoView;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity{
 
-    private EditText editText;
-    private boolean isLive;
+    private static final String VOD_URL = "http://mov.bn.netease.com/open-movie/nos/flv/2017/01/03/SC8U8K7BC_hd.flv";
+    private IjkVideoView mPlayer1;
+    private IjkVideoView mPlayer2;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        editText = findViewById(R.id.et);
-
-        ((RadioGroup) findViewById(R.id.rg)).setOnCheckedChangeListener((group, checkedId) -> {
-            switch (checkedId) {
-                case R.id.vod:
-                    isLive = false;
-                    break;
-                case R.id.live:
-                    isLive = true;
-                    break;
-            }
-        });
-        AndPermission
-                .with(this)
-                .runtime()
-                .permission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                .onDenied(data -> {
-
-                })
-                .onGranted(data -> {
-
-                })
-                .start();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int itemId = item.getItemId();
-        switch (itemId) {
-            case R.id.close_float_window:
-                PIPManager.getInstance().stopFloatWindow();
-                PIPManager.getInstance().reset();
-                break;
-            case R.id.clear_cache:
-                if (VideoCacheManager.clearAllCache(this)) {
-                    Toast.makeText(this, "清除缓存成功", Toast.LENGTH_SHORT).show();
-                }
-                break;
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setTitle(R.string.str_multi_player);
+            actionBar.setDisplayHomeAsUpEnabled(true);
         }
-        return super.onOptionsItemSelected(item);
+
+
+
+        mPlayer1 = findViewById(R.id.player_1);
+        mPlayer1.setUrl(VOD_URL);
+
+        mPlayer1.setEnableAudioFocus(false);
+        StandardVideoController controller1 = new StandardVideoController(this);
+        mPlayer1.setVideoController(controller1);
+
+        mPlayer2 = findViewById(R.id.player_2);
+        mPlayer2.setUrl(VOD_URL);
+        mPlayer2.setEnableAudioFocus(false);
+        StandardVideoController controller2 = new StandardVideoController(this);
+        mPlayer2.setVideoController(controller2);
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu, menu);
-        return super.onCreateOptionsMenu(menu);
+    protected void onPause() {
+        super.onPause();
+        mPlayer1.pause();
+        mPlayer2.pause();
     }
 
-    public void playOther(View view) {
-        String url = editText.getText().toString();
-        if (TextUtils.isEmpty(url)) return;
-        Intent intent = new Intent(this, PlayerActivity.class);
-        intent.putExtra("url", url);
-        intent.putExtra("isLive", isLive);
-        startActivity(intent);
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mPlayer1.resume();
+        mPlayer2.resume();
     }
 
-    public void clearUrl(View view) {
-        editText.setText("");
-    }
-
-    public void api(View view) {
-        startActivity(new Intent(this, ApiActivity.class));
-    }
-
-    public void extend(View view) {
-        startActivity(new Intent(this, ExtendActivity.class));
-    }
-
-    public void list(View view) {
-        startActivity(new Intent(this, ListActivity.class));
-    }
-
-    public void pip(View view) {
-        startActivity(new Intent(this, PIPDemoActivity.class));
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mPlayer1.release();
+        mPlayer2.release();
     }
 }
