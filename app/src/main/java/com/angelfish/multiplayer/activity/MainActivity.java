@@ -14,7 +14,7 @@ import com.angelfish.videoplayer.player.IjkVideoView;
 
 public class MainActivity extends AppCompatActivity{
 
-    private static final String VOD_URL = "http://mov.bn.netease.com/open-movie/nos/flv/2017/01/03/SC8U8K7BC_hd.flv";
+//    private static final String VOD_URL = "http://mov.bn.netease.com/open-movie/nos/flv/2017/01/03/SC8U8K7BC_hd.flv";
     private IjkVideoView mPlayer1;
     private IjkVideoView mPlayer2;
     private IjkVideoView mPlayer3;
@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity{
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-
+        String VOD_URL = "android.resource://" + getPackageName() + "/" + R.raw.movie;
 
         mPlayer1 = findViewById(R.id.player_1);
         mPlayer1.setUrl(VOD_URL);
