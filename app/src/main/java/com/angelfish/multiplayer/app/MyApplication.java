@@ -3,7 +3,7 @@ package com.angelfish.multiplayer.app;
 import android.app.Application;
 
 import com.angelfish.multiplayer.BuildConfig;
-import com.dueeeke.videoplayer.util.L;
+import com.angelfish.videoplayer.util.L;
 import com.squareup.leakcanary.LeakCanary;
 
 /**
@@ -19,10 +19,10 @@ public class MyApplication extends Application{
     public void onCreate() {
         super.onCreate();
         instance = this;
-        if (LeakCanary.isInAnalyzerProcess(this)) {
-            return;
-        }
-        LeakCanary.install(this);
+//        if (LeakCanary.isInAnalyzerProcess(this)) {
+//            return;
+//        }
+//        LeakCanary.install(this);
         //播放器日志
         L.setDebug(BuildConfig.DEBUG);
     }

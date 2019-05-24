@@ -10,8 +10,8 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.angelfish.multiplayer.R;
-import com.dueeeke.videocontroller.StandardVideoController;
-import com.dueeeke.videoplayer.player.IjkVideoView;
+import com.angelfish.videocontroller.StandardVideoController;
+import com.angelfish.videoplayer.player.IjkVideoView;
 
 /**
  * 截图

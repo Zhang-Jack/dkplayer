@@ -6,7 +6,7 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 
 import com.angelfish.multiplayer.interf.DefinitionMediaPlayerControl;
-import com.dueeeke.videoplayer.player.IjkVideoView;
+import com.angelfish.videoplayer.player.IjkVideoView;
 
 import java.util.LinkedHashMap;
 

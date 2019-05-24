@@ -1,4 +1,4 @@
-package com.dueeeke.videoplayer.player;
+package com.angelfish.videoplayer.player;
 
 import android.app.Activity;
 import android.content.Context;
@@ -19,10 +19,10 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
-import com.dueeeke.videoplayer.controller.BaseVideoController;
-import com.dueeeke.videoplayer.util.PlayerUtils;
-import com.dueeeke.videoplayer.widget.ResizeSurfaceView;
-import com.dueeeke.videoplayer.widget.ResizeTextureView;
+import com.angelfish.videoplayer.controller.BaseVideoController;
+import com.angelfish.videoplayer.util.PlayerUtils;
+import com.angelfish.videoplayer.widget.ResizeSurfaceView;
+import com.angelfish.videoplayer.widget.ResizeTextureView;
 
 /**
  * 播放器

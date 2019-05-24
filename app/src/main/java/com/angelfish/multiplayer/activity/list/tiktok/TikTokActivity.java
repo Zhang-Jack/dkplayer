@@ -20,7 +20,7 @@ import com.angelfish.multiplayer.adapter.TikTokAdapter;
 import com.angelfish.multiplayer.bean.VideoBean;
 import com.angelfish.multiplayer.util.DataUtil;
 import com.angelfish.multiplayer.widget.controller.TikTokController;
-import com.dueeeke.videoplayer.player.IjkVideoView;
+import com.angelfish.videoplayer.player.IjkVideoView;
 
 import java.util.List;
 

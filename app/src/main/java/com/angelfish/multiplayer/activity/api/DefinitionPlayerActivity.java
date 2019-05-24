@@ -9,7 +9,7 @@ import android.view.MenuItem;
 import com.angelfish.multiplayer.R;
 import com.angelfish.multiplayer.widget.controller.DefinitionController;
 import com.angelfish.multiplayer.widget.videoview.DefinitionIjkVideoView;
-import com.dueeeke.videoplayer.player.IjkPlayer;
+import com.angelfish.videoplayer.player.IjkPlayer;
 
 import java.util.LinkedHashMap;
 

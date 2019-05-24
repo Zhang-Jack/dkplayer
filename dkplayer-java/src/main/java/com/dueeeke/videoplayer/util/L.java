@@ -1,4 +1,4 @@
-package com.dueeeke.videoplayer.util;
+package com.angelfish.videoplayer.util;
 
 import android.util.Log;
 

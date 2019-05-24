@@ -2,7 +2,7 @@ package com.angelfish.multiplayer.util;
 
 import android.text.TextUtils;
 
-import com.dueeeke.videoplayer.player.ProgressManager;
+import com.angelfish.videoplayer.player.ProgressManager;
 
 import java.util.LinkedHashMap;
 

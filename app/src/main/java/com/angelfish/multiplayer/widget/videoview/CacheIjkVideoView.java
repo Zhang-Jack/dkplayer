@@ -9,7 +9,7 @@ import android.util.AttributeSet;
 import com.danikula.videocache.CacheListener;
 import com.danikula.videocache.HttpProxyCacheServer;
 import com.angelfish.multiplayer.util.VideoCacheManager;
-import com.dueeeke.videoplayer.player.IjkVideoView;
+import com.angelfish.videoplayer.player.IjkVideoView;
 
 import java.io.File;
 

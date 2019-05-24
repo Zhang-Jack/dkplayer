@@ -26,8 +26,8 @@
 
 -keep class tv.danmaku.ijk.** { *; }
 -dontwarn tv.danmaku.ijk.**
--keep class com.dueeeke.videoplayer.** { *; }
--dontwarn com.dueeeke.videoplayer.**
+-keep class com.angelfish.videoplayer.** { *; }
+-dontwarn com.angelfish.videoplayer.**
 
 
 -dontwarn com.yanzhenjie.permission.**

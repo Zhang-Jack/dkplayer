@@ -13,8 +13,8 @@ import android.view.View;
 import com.angelfish.multiplayer.R;
 import com.angelfish.multiplayer.adapter.RotateRecyclerViewAdapter;
 import com.angelfish.multiplayer.util.DataUtil;
-import com.dueeeke.videoplayer.player.IjkVideoView;
-import com.dueeeke.videoplayer.player.VideoViewManager;
+import com.angelfish.videoplayer.player.IjkVideoView;
+import com.angelfish.videoplayer.player.VideoViewManager;
 
 import static android.support.v7.widget.RecyclerView.SCROLL_STATE_IDLE;
 

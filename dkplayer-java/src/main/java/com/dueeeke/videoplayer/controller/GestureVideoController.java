@@ -1,4 +1,4 @@
-package com.dueeeke.videoplayer.controller;
+package com.angelfish.videoplayer.controller;
 
 import android.content.Context;
 import android.media.AudioManager;
@@ -11,9 +11,9 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.dueeeke.videoplayer.R;
-import com.dueeeke.videoplayer.util.PlayerUtils;
-import com.dueeeke.videoplayer.widget.CenterView;
+import com.angelfish.videoplayer.R;
+import com.angelfish.videoplayer.util.PlayerUtils;
+import com.angelfish.videoplayer.widget.CenterView;
 
 /**
  * 包含手势操作的VideoController

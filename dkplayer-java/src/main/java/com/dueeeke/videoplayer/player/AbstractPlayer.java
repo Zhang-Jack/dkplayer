@@ -1,10 +1,10 @@
-package com.dueeeke.videoplayer.player;
+package com.angelfish.videoplayer.player;
 
 import android.content.res.AssetFileDescriptor;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 
-import com.dueeeke.videoplayer.listener.PlayerEventListener;
+import com.angelfish.videoplayer.listener.PlayerEventListener;
 
 import java.util.Map;
 

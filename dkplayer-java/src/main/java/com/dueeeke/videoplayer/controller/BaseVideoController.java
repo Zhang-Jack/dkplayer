@@ -1,4 +1,4 @@
-package com.dueeeke.videoplayer.controller;
+package com.angelfish.videoplayer.controller;
 
 import android.app.Activity;
 import android.content.Context;
@@ -11,11 +11,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
 
-import com.dueeeke.videoplayer.R;
-import com.dueeeke.videoplayer.player.BaseIjkVideoView;
-import com.dueeeke.videoplayer.player.IjkVideoView;
-import com.dueeeke.videoplayer.util.PlayerUtils;
-import com.dueeeke.videoplayer.widget.StatusView;
+import com.angelfish.videoplayer.R;
+import com.angelfish.videoplayer.player.BaseIjkVideoView;
+import com.angelfish.videoplayer.player.IjkVideoView;
+import com.angelfish.videoplayer.util.PlayerUtils;
+import com.angelfish.videoplayer.widget.StatusView;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

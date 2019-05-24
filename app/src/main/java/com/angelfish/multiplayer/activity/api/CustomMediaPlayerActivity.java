@@ -9,9 +9,9 @@ import android.view.View;
 import android.widget.RadioGroup;
 
 import com.angelfish.multiplayer.R;
-import com.dueeeke.videocontroller.StandardVideoController;
-import com.dueeeke.videoplayer.player.IjkPlayer;
-import com.dueeeke.videoplayer.player.IjkVideoView;
+import com.angelfish.videocontroller.StandardVideoController;
+import com.angelfish.videoplayer.player.IjkPlayer;
+import com.angelfish.videoplayer.player.IjkVideoView;
 
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 

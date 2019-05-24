@@ -9,8 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.angelfish.multiplayer.R;
-import com.dueeeke.videocontroller.StandardVideoController;
-import com.dueeeke.videoplayer.player.IjkVideoView;
+import com.angelfish.videocontroller.StandardVideoController;
+import com.angelfish.videoplayer.player.IjkVideoView;
 
 public class PlayerFragment extends Fragment {
 

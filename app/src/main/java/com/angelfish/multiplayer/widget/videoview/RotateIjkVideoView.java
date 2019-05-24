@@ -8,8 +8,8 @@ import android.util.AttributeSet;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 
-import com.dueeeke.videoplayer.player.IjkVideoView;
-import com.dueeeke.videoplayer.util.PlayerUtils;
+import com.angelfish.videoplayer.player.IjkVideoView;
+import com.angelfish.videoplayer.util.PlayerUtils;
 
 public class RotateIjkVideoView extends IjkVideoView {
     public RotateIjkVideoView(@NonNull Context context) {

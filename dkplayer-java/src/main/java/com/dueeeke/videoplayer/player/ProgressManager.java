@@ -1,4 +1,4 @@
-package com.dueeeke.videoplayer.player;
+package com.angelfish.videoplayer.player;
 
 public abstract class ProgressManager {
 

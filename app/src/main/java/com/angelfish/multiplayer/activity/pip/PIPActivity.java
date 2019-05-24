@@ -11,8 +11,8 @@ import android.widget.FrameLayout;
 import com.bumptech.glide.Glide;
 import com.angelfish.multiplayer.R;
 import com.angelfish.multiplayer.util.PIPManager;
-import com.dueeeke.videocontroller.StandardVideoController;
-import com.dueeeke.videoplayer.player.IjkVideoView;
+import com.angelfish.videocontroller.StandardVideoController;
+import com.angelfish.videoplayer.player.IjkVideoView;
 import com.yanzhenjie.permission.AndPermission;
 
 public class PIPActivity extends AppCompatActivity{

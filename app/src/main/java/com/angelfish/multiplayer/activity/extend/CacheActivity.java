@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.angelfish.multiplayer.R;
 import com.angelfish.multiplayer.widget.videoview.CacheIjkVideoView;
-import com.dueeeke.videocontroller.StandardVideoController;
+import com.angelfish.videocontroller.StandardVideoController;
 
 public class CacheActivity extends AppCompatActivity {
 

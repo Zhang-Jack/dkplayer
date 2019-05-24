@@ -1,10 +1,10 @@
-package com.dueeeke.videoplayer.widget;
+package com.angelfish.videoplayer.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.SurfaceView;
 
-import com.dueeeke.videoplayer.player.IjkVideoView;
+import com.angelfish.videoplayer.player.IjkVideoView;
 
 /**
  * Created by Devlin_n on 2017/4/10.

@@ -37,8 +37,8 @@ A video player based on [IjkPlayer](https://github.com/Bilibili/ijkplayer).
 ## 混淆
 	-keep class tv.danmaku.ijk.** { *; }
     -dontwarn tv.danmaku.ijk.**
-    -keep class com.dueeeke.videoplayer.** { *; }
-    -dontwarn com.dueeeke.videoplayer.**
+    -keep class com.angelfish.videoplayer.** { *; }
+    -dontwarn com.angelfish.videoplayer.**
     
 ## 联系我
 在github上提交[issue](https://github.com/dueeeke/dkplayer/issues)或者邮箱：xinyunjian1995@gmail.com

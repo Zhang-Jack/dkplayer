@@ -7,7 +7,7 @@ import android.view.ViewParent;
 import com.angelfish.multiplayer.app.MyApplication;
 import com.angelfish.multiplayer.widget.FloatView;
 import com.angelfish.multiplayer.widget.controller.FloatController;
-import com.dueeeke.videoplayer.player.IjkVideoView;
+import com.angelfish.videoplayer.player.IjkVideoView;
 
 /**
  * 悬浮播放

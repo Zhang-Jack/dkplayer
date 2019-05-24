@@ -1,4 +1,4 @@
-package com.dueeeke.videoplayer.controller;
+package com.angelfish.videoplayer.controller;
 
 import android.graphics.Bitmap;
 

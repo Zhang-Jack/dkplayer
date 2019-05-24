@@ -7,8 +7,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 
-import com.dueeeke.videoplayer.player.IjkVideoView;
-import com.dueeeke.videoplayer.util.PlayerUtils;
+import com.angelfish.videoplayer.player.IjkVideoView;
+import com.angelfish.videoplayer.util.PlayerUtils;
 
 /**
  * 锁定全屏播放器

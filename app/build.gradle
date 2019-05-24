@@ -83,6 +83,7 @@ dependencies {
     implementation 'com.google.android.exoplayer:extension-rtmp:2.8.2'
     //缓存
     implementation 'com.danikula:videocache:2.7.1'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
 
 
     implementation project(':dkplayer-java')

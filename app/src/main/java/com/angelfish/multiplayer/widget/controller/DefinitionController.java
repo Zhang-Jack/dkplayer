@@ -18,10 +18,10 @@ import android.widget.TextView;
 
 import com.angelfish.multiplayer.R;
 import com.angelfish.multiplayer.interf.DefinitionMediaPlayerControl;
-import com.dueeeke.videocontroller.StandardVideoController;
-import com.dueeeke.videoplayer.player.IjkVideoView;
-import com.dueeeke.videoplayer.util.L;
-import com.dueeeke.videoplayer.util.PlayerUtils;
+import com.angelfish.videocontroller.StandardVideoController;
+import com.angelfish.videoplayer.player.IjkVideoView;
+import com.angelfish.videoplayer.util.L;
+import com.angelfish.videoplayer.util.PlayerUtils;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;

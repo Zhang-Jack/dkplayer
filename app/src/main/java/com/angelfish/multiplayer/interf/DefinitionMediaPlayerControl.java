@@ -1,6 +1,6 @@
 package com.angelfish.multiplayer.interf;
 
-import com.dueeeke.videoplayer.controller.MediaPlayerControl;
+import com.angelfish.videoplayer.controller.MediaPlayerControl;
 
 import java.util.LinkedHashMap;
 

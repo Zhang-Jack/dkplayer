@@ -1,4 +1,4 @@
-package com.dueeeke.videocontroller;
+package com.angelfish.videocontroller;
 
 import android.app.Activity;
 import android.content.Context;
@@ -21,10 +21,10 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.dueeeke.videoplayer.controller.GestureVideoController;
-import com.dueeeke.videoplayer.player.IjkVideoView;
-import com.dueeeke.videoplayer.util.L;
-import com.dueeeke.videoplayer.util.PlayerUtils;
+import com.angelfish.videoplayer.controller.GestureVideoController;
+import com.angelfish.videoplayer.player.IjkVideoView;
+import com.angelfish.videoplayer.util.L;
+import com.angelfish.videoplayer.util.PlayerUtils;
 
 /**
  * 直播/点播控制器

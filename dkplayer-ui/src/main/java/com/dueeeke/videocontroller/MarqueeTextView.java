@@ -1,4 +1,4 @@
-package com.dueeeke.videocontroller;
+package com.angelfish.videocontroller;
 
 import android.content.Context;
 import android.support.v7.widget.AppCompatTextView;

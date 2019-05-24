@@ -11,9 +11,9 @@ import com.bumptech.glide.Glide;
 import com.angelfish.multiplayer.R;
 import com.angelfish.multiplayer.bean.VideoBean;
 import com.angelfish.multiplayer.util.ProgressManagerImpl;
-import com.dueeeke.videocontroller.StandardVideoController;
-import com.dueeeke.videoplayer.player.IjkPlayer;
-import com.dueeeke.videoplayer.player.IjkVideoView;
+import com.angelfish.videocontroller.StandardVideoController;
+import com.angelfish.videoplayer.player.IjkPlayer;
+import com.angelfish.videoplayer.player.IjkVideoView;
 
 import java.util.List;
 

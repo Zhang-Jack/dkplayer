@@ -10,10 +10,10 @@ import android.view.View;
 
 import com.angelfish.multiplayer.R;
 import com.angelfish.multiplayer.util.IntentKeys;
-import com.dueeeke.videocontroller.StandardVideoController;
-import com.dueeeke.videoplayer.listener.OnVideoViewStateChangeListener;
-import com.dueeeke.videoplayer.player.IjkVideoView;
-import com.dueeeke.videoplayer.util.L;
+import com.angelfish.videocontroller.StandardVideoController;
+import com.angelfish.videoplayer.listener.OnVideoViewStateChangeListener;
+import com.angelfish.videoplayer.player.IjkVideoView;
+import com.angelfish.videoplayer.util.L;
 
 /**
  * 播放器演示

@@ -11,10 +11,10 @@ import android.widget.FrameLayout;
 import com.angelfish.multiplayer.R;
 import com.angelfish.multiplayer.bean.VideoBean;
 import com.angelfish.multiplayer.util.DataUtil;
-import com.dueeeke.videocontroller.StandardVideoController;
-import com.dueeeke.videoplayer.listener.OnVideoViewStateChangeListener;
-import com.dueeeke.videoplayer.player.IjkVideoView;
-import com.dueeeke.videoplayer.util.PlayerUtils;
+import com.angelfish.videocontroller.StandardVideoController;
+import com.angelfish.videoplayer.listener.OnVideoViewStateChangeListener;
+import com.angelfish.videoplayer.player.IjkVideoView;
+import com.angelfish.videoplayer.util.PlayerUtils;
 
 import java.util.List;
 

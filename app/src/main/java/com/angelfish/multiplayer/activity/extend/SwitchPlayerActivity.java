@@ -10,10 +10,10 @@ import android.view.View;
 import com.angelfish.multiplayer.R;
 import com.angelfish.multiplayer.player.AndroidMediaPlayer;
 import com.angelfish.multiplayer.player.ExoMediaPlayer;
-import com.dueeeke.videocontroller.StandardVideoController;
-import com.dueeeke.videoplayer.player.AbstractPlayer;
-import com.dueeeke.videoplayer.player.IjkPlayer;
-import com.dueeeke.videoplayer.player.IjkVideoView;
+import com.angelfish.videocontroller.StandardVideoController;
+import com.angelfish.videoplayer.player.AbstractPlayer;
+import com.angelfish.videoplayer.player.IjkPlayer;
+import com.angelfish.videoplayer.player.IjkVideoView;
 
 /**
  * 多播放器切换

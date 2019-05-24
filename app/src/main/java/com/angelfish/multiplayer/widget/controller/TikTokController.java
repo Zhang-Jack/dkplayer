@@ -7,9 +7,9 @@ import android.util.AttributeSet;
 import android.widget.ImageView;
 
 import com.angelfish.multiplayer.R;
-import com.dueeeke.videoplayer.controller.BaseVideoController;
-import com.dueeeke.videoplayer.player.IjkVideoView;
-import com.dueeeke.videoplayer.util.L;
+import com.angelfish.videoplayer.controller.BaseVideoController;
+import com.angelfish.videoplayer.player.IjkVideoView;
+import com.angelfish.videoplayer.util.L;
 
 /**
  * 抖音

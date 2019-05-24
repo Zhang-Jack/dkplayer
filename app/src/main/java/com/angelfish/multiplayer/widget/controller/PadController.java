@@ -8,8 +8,8 @@ import android.util.AttributeSet;
 import android.widget.Toast;
 
 import com.angelfish.multiplayer.R;
-import com.dueeeke.videocontroller.StandardVideoController;
-import com.dueeeke.videoplayer.util.PlayerUtils;
+import com.angelfish.videocontroller.StandardVideoController;
+import com.angelfish.videoplayer.util.PlayerUtils;
 
 public class PadController extends StandardVideoController {
     public PadController(@NonNull Context context) {

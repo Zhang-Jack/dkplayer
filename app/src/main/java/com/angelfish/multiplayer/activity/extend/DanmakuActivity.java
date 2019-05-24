@@ -10,9 +10,9 @@ import android.view.View;
 
 import com.angelfish.multiplayer.R;
 import com.angelfish.multiplayer.widget.videoview.DanmukuVideoView;
-import com.dueeeke.videocontroller.StandardVideoController;
-import com.dueeeke.videoplayer.listener.OnVideoViewStateChangeListener;
-import com.dueeeke.videoplayer.player.IjkVideoView;
+import com.angelfish.videocontroller.StandardVideoController;
+import com.angelfish.videoplayer.listener.OnVideoViewStateChangeListener;
+import com.angelfish.videoplayer.player.IjkVideoView;
 
 /**
  * 弹幕播放

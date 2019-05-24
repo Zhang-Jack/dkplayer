@@ -11,7 +11,7 @@ import android.view.MenuItem;
 import com.angelfish.multiplayer.R;
 import com.angelfish.multiplayer.adapter.MyPagerAdapter;
 import com.angelfish.multiplayer.fragment.RecyclerViewFragment;
-import com.dueeeke.videoplayer.player.VideoViewManager;
+import com.angelfish.videoplayer.player.VideoViewManager;
 
 import java.util.ArrayList;
 import java.util.List;

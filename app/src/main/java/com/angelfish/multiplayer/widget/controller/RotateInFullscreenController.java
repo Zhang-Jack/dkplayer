@@ -11,9 +11,9 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.angelfish.multiplayer.R;
-import com.dueeeke.videocontroller.StandardVideoController;
-import com.dueeeke.videoplayer.player.IjkVideoView;
-import com.dueeeke.videoplayer.util.PlayerUtils;
+import com.angelfish.videocontroller.StandardVideoController;
+import com.angelfish.videoplayer.player.IjkVideoView;
+import com.angelfish.videoplayer.util.PlayerUtils;
 
 public class RotateInFullscreenController extends StandardVideoController {
 

@@ -1,4 +1,4 @@
-package com.dueeeke.videoplayer.player;
+package com.angelfish.videoplayer.player;
 
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;

@@ -1,4 +1,4 @@
-package com.dueeeke.videoplayer.player;
+package com.angelfish.videoplayer.player;
 
 import android.app.Activity;
 import android.content.Context;
@@ -13,12 +13,12 @@ import android.util.AttributeSet;
 import android.view.OrientationEventListener;
 import android.widget.FrameLayout;
 
-import com.dueeeke.videoplayer.R;
-import com.dueeeke.videoplayer.controller.BaseVideoController;
-import com.dueeeke.videoplayer.controller.MediaPlayerControl;
-import com.dueeeke.videoplayer.listener.OnVideoViewStateChangeListener;
-import com.dueeeke.videoplayer.listener.PlayerEventListener;
-import com.dueeeke.videoplayer.util.PlayerUtils;
+import com.angelfish.videoplayer.R;
+import com.angelfish.videoplayer.controller.BaseVideoController;
+import com.angelfish.videoplayer.controller.MediaPlayerControl;
+import com.angelfish.videoplayer.listener.OnVideoViewStateChangeListener;
+import com.angelfish.videoplayer.listener.PlayerEventListener;
+import com.angelfish.videoplayer.util.PlayerUtils;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -20,8 +20,8 @@ import com.angelfish.multiplayer.util.DataUtil;
 import com.angelfish.multiplayer.util.IntentKeys;
 import com.angelfish.multiplayer.util.SeamlessPlayHelper;
 import com.angelfish.multiplayer.widget.controller.SeamlessController;
-import com.dueeeke.videoplayer.listener.OnVideoViewStateChangeListener;
-import com.dueeeke.videoplayer.player.IjkVideoView;
+import com.angelfish.videoplayer.listener.OnVideoViewStateChangeListener;
+import com.angelfish.videoplayer.player.IjkVideoView;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.dueeeke.videoplayer.widget;
+package com.angelfish.videoplayer.widget;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
@@ -10,7 +10,7 @@ import android.view.ViewConfiguration;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.dueeeke.videoplayer.R;
+import com.angelfish.videoplayer.R;
 
 /**
  * 错误提示，网络提示

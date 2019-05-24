@@ -12,8 +12,8 @@ import com.bumptech.glide.Glide;
 import com.angelfish.multiplayer.R;
 import com.angelfish.multiplayer.bean.VideoBean;
 import com.angelfish.multiplayer.widget.controller.RotateInFullscreenController;
-import com.dueeeke.videoplayer.listener.OnVideoViewStateChangeListener;
-import com.dueeeke.videoplayer.player.IjkVideoView;
+import com.angelfish.videoplayer.listener.OnVideoViewStateChangeListener;
+import com.angelfish.videoplayer.player.IjkVideoView;
 
 import java.util.List;
 

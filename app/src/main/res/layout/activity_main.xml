@@ -2,16 +2,51 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal">
+    android:weightSum="3"
+    android:orientation="vertical">
 
-    <com.dueeeke.videoplayer.player.IjkVideoView
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:background="#192832">
+    <com.angelfish.videoplayer.player.IjkVideoView
         android:id="@+id/player_1"
-        android:layout_width="200dp"
-        android:layout_height="match_parent" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+    </LinearLayout>
 
-    <com.dueeeke.videoplayer.player.IjkVideoView
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="#193222">
+
+    <com.angelfish.videoplayer.player.IjkVideoView
         android:id="@+id/player_2"
-        android:layout_width="200dp"
-        android:layout_height="match_parent" />
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+
+        />
+
+    <com.angelfish.videoplayer.player.IjkVideoView
+        android:id="@+id/player_3"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        />
+
+    <com.angelfish.videoplayer.player.IjkVideoView
+        android:id="@+id/player_4"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        />
+    <com.angelfish.videoplayer.player.IjkVideoView
+            android:id="@+id/player_5"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+
+        />
+    </LinearLayout>
 
 </LinearLayout>

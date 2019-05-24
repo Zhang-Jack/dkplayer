@@ -11,9 +11,9 @@ import com.angelfish.multiplayer.R;
 import com.angelfish.multiplayer.interf.ControllerListener;
 import com.angelfish.multiplayer.widget.controller.AdController;
 import com.angelfish.multiplayer.widget.videoview.CacheIjkVideoView;
-import com.dueeeke.videocontroller.StandardVideoController;
-import com.dueeeke.videoplayer.listener.OnVideoViewStateChangeListener;
-import com.dueeeke.videoplayer.player.IjkVideoView;
+import com.angelfish.videocontroller.StandardVideoController;
+import com.angelfish.videoplayer.listener.OnVideoViewStateChangeListener;
+import com.angelfish.videoplayer.player.IjkVideoView;
 
 /**
  * 广告

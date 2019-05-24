@@ -11,8 +11,8 @@ import android.widget.FrameLayout;
 import com.angelfish.multiplayer.R;
 import com.angelfish.multiplayer.util.IntentKeys;
 import com.angelfish.multiplayer.util.SeamlessPlayHelper;
-import com.dueeeke.videocontroller.StandardVideoController;
-import com.dueeeke.videoplayer.player.IjkVideoView;
+import com.angelfish.videocontroller.StandardVideoController;
+import com.angelfish.videoplayer.player.IjkVideoView;
 
 public class DetailActivity extends AppCompatActivity {
 

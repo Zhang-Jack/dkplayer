@@ -8,7 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import com.angelfish.multiplayer.R;
 import com.angelfish.multiplayer.widget.controller.FullScreenController;
 import com.angelfish.multiplayer.widget.videoview.FullScreenIjkVideoView;
-import com.dueeeke.videoplayer.player.IjkVideoView;
+import com.angelfish.videoplayer.player.IjkVideoView;
 
 /**
  * 全屏播放

@@ -1,4 +1,4 @@
-package com.dueeeke.videoplayer.listener;
+package com.angelfish.videoplayer.listener;
 
 /**
  * Created by xinyu on 2017/12/21.

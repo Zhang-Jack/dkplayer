@@ -1,4 +1,4 @@
-package com.dueeeke.videoplayer.widget;
+package com.angelfish.videoplayer.widget;
 
 import android.content.Context;
 import android.view.Gravity;
@@ -11,7 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.dueeeke.videoplayer.R;
+import com.angelfish.videoplayer.R;
 
 /**
  * 显示亮度，音量，进度

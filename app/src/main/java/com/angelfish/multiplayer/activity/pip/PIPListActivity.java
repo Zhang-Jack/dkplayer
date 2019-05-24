@@ -16,8 +16,8 @@ import com.angelfish.multiplayer.adapter.FloatRecyclerViewAdapter;
 import com.angelfish.multiplayer.bean.VideoBean;
 import com.angelfish.multiplayer.util.DataUtil;
 import com.angelfish.multiplayer.util.PIPManager;
-import com.dueeeke.videocontroller.StandardVideoController;
-import com.dueeeke.videoplayer.player.IjkVideoView;
+import com.angelfish.videocontroller.StandardVideoController;
+import com.angelfish.videoplayer.player.IjkVideoView;
 import com.yanzhenjie.permission.AndPermission;
 
 import java.util.List;

@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import com.angelfish.multiplayer.R;
 import com.angelfish.multiplayer.adapter.VideoRecyclerViewAdapter;
 import com.angelfish.multiplayer.util.DataUtil;
-import com.dueeeke.videoplayer.player.IjkVideoView;
+import com.angelfish.videoplayer.player.IjkVideoView;
 
 /**
  * RecyclerViewFragment

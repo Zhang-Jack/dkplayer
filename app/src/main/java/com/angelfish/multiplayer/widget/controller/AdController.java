@@ -11,9 +11,9 @@ import android.widget.TextView;
 
 import com.angelfish.multiplayer.R;
 import com.angelfish.multiplayer.interf.ControllerListener;
-import com.dueeeke.videoplayer.controller.BaseVideoController;
-import com.dueeeke.videoplayer.player.IjkVideoView;
-import com.dueeeke.videoplayer.util.PlayerUtils;
+import com.angelfish.videoplayer.controller.BaseVideoController;
+import com.angelfish.videoplayer.player.IjkVideoView;
+import com.angelfish.videoplayer.util.PlayerUtils;
 
 /**
  * 广告控制器

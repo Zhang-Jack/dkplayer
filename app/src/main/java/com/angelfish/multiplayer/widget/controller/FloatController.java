@@ -11,8 +11,8 @@ import android.widget.ProgressBar;
 
 import com.angelfish.multiplayer.R;
 import com.angelfish.multiplayer.util.PIPManager;
-import com.dueeeke.videoplayer.controller.GestureVideoController;
-import com.dueeeke.videoplayer.player.IjkVideoView;
+import com.angelfish.videoplayer.controller.GestureVideoController;
+import com.angelfish.videoplayer.player.IjkVideoView;
 
 /**
  * 悬浮播放控制器

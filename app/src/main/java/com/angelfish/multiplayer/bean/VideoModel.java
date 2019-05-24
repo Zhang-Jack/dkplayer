@@ -1,6 +1,6 @@
 package com.angelfish.multiplayer.bean;
 
-import com.dueeeke.videoplayer.controller.BaseVideoController;
+import com.angelfish.videoplayer.controller.BaseVideoController;
 
 /**
  * Created by Devlin_n on 2017/4/11.

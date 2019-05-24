@@ -1,10 +1,10 @@
-package com.dueeeke.videoplayer.widget;
+package com.angelfish.videoplayer.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.TextureView;
 
-import com.dueeeke.videoplayer.player.IjkVideoView;
+import com.angelfish.videoplayer.player.IjkVideoView;
 
 /**
  * 用于显示video的，做了横屏与竖屏的匹配，还有需要rotation需求的

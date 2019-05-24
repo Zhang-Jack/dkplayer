@@ -19,9 +19,9 @@ import android.widget.FrameLayout;
 
 import com.angelfish.multiplayer.R;
 import com.angelfish.multiplayer.widget.CenteredImageSpan;
-import com.dueeeke.videoplayer.BuildConfig;
-import com.dueeeke.videoplayer.player.IjkVideoView;
-import com.dueeeke.videoplayer.util.PlayerUtils;
+import com.angelfish.videoplayer.BuildConfig;
+import com.angelfish.videoplayer.player.IjkVideoView;
+import com.angelfish.videoplayer.util.PlayerUtils;
 
 import master.flame.danmaku.controller.IDanmakuView;
 import master.flame.danmaku.danmaku.model.BaseDanmaku;

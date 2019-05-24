@@ -12,7 +12,7 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 
 import com.angelfish.multiplayer.R;
-import com.dueeeke.videoplayer.util.PlayerUtils;
+import com.angelfish.videoplayer.util.PlayerUtils;
 
 /**
  * 悬浮窗控件（解决滑动冲突）

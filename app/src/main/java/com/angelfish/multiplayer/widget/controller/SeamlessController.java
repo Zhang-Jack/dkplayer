@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.angelfish.multiplayer.R;
-import com.dueeeke.videoplayer.controller.BaseVideoController;
+import com.angelfish.videoplayer.controller.BaseVideoController;
 
 public class SeamlessController extends BaseVideoController {
 
