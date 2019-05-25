@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity{
         mPlayer1.setUrl(VOD_URL_1);
 
         mPlayer1.setEnableAudioFocus(false);
+        mPlayer1.setUsingSurfaceView(true);
 //        StandardVideoController controller1 = new StandardVideoController(this);
 //        mPlayer1.setVideoController(controller1);
                     //高级设置（可选，须在start()之前调用方可生效）
@@ -68,7 +69,6 @@ public class MainActivity extends AppCompatActivity{
                     case IjkVideoView.STATE_PREPARING:
                         break;
                     case IjkVideoView.STATE_PREPARED:
-                        mPlayer1.start();
                         break;
                     case IjkVideoView.STATE_PLAYING:
                         startPlayingVideo2();
@@ -95,6 +95,7 @@ public class MainActivity extends AppCompatActivity{
         mPlayer2 = findViewById(R.id.player_2);
         mPlayer2.setUrl(VOD_URL_2);
         mPlayer2.setEnableAudioFocus(false);
+        mPlayer2.setUsingSurfaceView(true);
         //        StandardVideoController controller2 = new StandardVideoController(this);
         //        mPlayer2.setVideoController(controller2);
         mPlayer2.setLooping(true);
@@ -144,6 +145,7 @@ public class MainActivity extends AppCompatActivity{
         mPlayer3 = findViewById(R.id.player_3);
         mPlayer3.setUrl(VOD_URL_3);
         mPlayer3.setEnableAudioFocus(false);
+        mPlayer3.setUsingSurfaceView(true);
         //        StandardVideoController controller2 = new StandardVideoController(this);
         //        mPlayer2.setVideoController(controller2);
         mPlayer3.setLooping(true);
@@ -193,6 +195,7 @@ public class MainActivity extends AppCompatActivity{
         mPlayer4 = findViewById(R.id.player_4);
         mPlayer4.setUrl(VOD_URL_4);
         mPlayer4.setEnableAudioFocus(false);
+        mPlayer4.setUsingSurfaceView(true);
         //        StandardVideoController controller2 = new StandardVideoController(this);
         //        mPlayer2.setVideoController(controller2);
         mPlayer4.setLooping(true);
@@ -242,6 +245,7 @@ public class MainActivity extends AppCompatActivity{
         mPlayer5 = findViewById(R.id.player_5);
         mPlayer5.setUrl(VOD_URL_5);
         mPlayer5.setEnableAudioFocus(false);
+        mPlayer5.setUsingSurfaceView(true);
         //        StandardVideoController controller2 = new StandardVideoController(this);
         //        mPlayer2.setVideoController(controller2);
         mPlayer5.setLooping(true);
