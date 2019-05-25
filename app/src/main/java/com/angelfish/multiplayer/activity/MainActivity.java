@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -43,6 +44,19 @@ public class MainActivity extends AppCompatActivity{
         String VOD_URL_1 = "android.resource://" + getPackageName() + "/" + R.raw.movie;
         mPlayer1 = findViewById(R.id.player_1);
         mPlayer1.setUrl(VOD_URL_1);
+        String VOD_URL_2 = "android.resource://" + getPackageName() + "/" + R.raw.movie2;
+        mPlayer2 = findViewById(R.id.player_2);
+        mPlayer2.setUrl(VOD_URL_2);
+        String VOD_URL_3 = "android.resource://" + getPackageName() + "/" + R.raw.movie3;
+        mPlayer3 = findViewById(R.id.player_3);
+        mPlayer3.setUrl(VOD_URL_3);
+        String VOD_URL_4 = "android.resource://" + getPackageName() + "/" + R.raw.movie4;
+        mPlayer4 = findViewById(R.id.player_4);
+        mPlayer4.setUrl(VOD_URL_4);
+        String VOD_URL_5 = "android.resource://" + getPackageName() + "/" + R.raw.movie5;
+        mPlayer5 = findViewById(R.id.player_5);
+        mPlayer5.setUrl(VOD_URL_5);
+
 
         mPlayer1.setEnableAudioFocus(false);
         mPlayer1.setUsingSurfaceView(true);
@@ -50,6 +64,7 @@ public class MainActivity extends AppCompatActivity{
 //        mPlayer1.setVideoController(controller1);
                     //高级设置（可选，须在start()之前调用方可生效）
         mPlayer1.setLooping(true);
+
 
         mPlayer1.addOnVideoViewStateChangeListener(new OnVideoViewStateChangeListener() {
             @Override
@@ -88,12 +103,10 @@ public class MainActivity extends AppCompatActivity{
         });
 
         mPlayer1.start();
+        mPlayer1.setVisibility(View.GONE);
     }
 
     public void startPlayingVideo2(){
-        String VOD_URL_2 = "android.resource://" + getPackageName() + "/" + R.raw.movie2;
-        mPlayer2 = findViewById(R.id.player_2);
-        mPlayer2.setUrl(VOD_URL_2);
         mPlayer2.setEnableAudioFocus(false);
         mPlayer2.setUsingSurfaceView(true);
         //        StandardVideoController controller2 = new StandardVideoController(this);
@@ -138,12 +151,10 @@ public class MainActivity extends AppCompatActivity{
         });
 
         mPlayer2.start();
+        mPlayer2.setVisibility(View.GONE);
     }
 
     public void startPlayingVideo3(){
-        String VOD_URL_3 = "android.resource://" + getPackageName() + "/" + R.raw.movie3;
-        mPlayer3 = findViewById(R.id.player_3);
-        mPlayer3.setUrl(VOD_URL_3);
         mPlayer3.setEnableAudioFocus(false);
         mPlayer3.setUsingSurfaceView(true);
         //        StandardVideoController controller2 = new StandardVideoController(this);
@@ -188,12 +199,10 @@ public class MainActivity extends AppCompatActivity{
         });
 
         mPlayer3.start();
+        mPlayer3.setVisibility(View.GONE);
     }
 
     public void startPlayingVideo4(){
-        String VOD_URL_4 = "android.resource://" + getPackageName() + "/" + R.raw.movie4;
-        mPlayer4 = findViewById(R.id.player_4);
-        mPlayer4.setUrl(VOD_URL_4);
         mPlayer4.setEnableAudioFocus(false);
         mPlayer4.setUsingSurfaceView(true);
         //        StandardVideoController controller2 = new StandardVideoController(this);
@@ -238,12 +247,10 @@ public class MainActivity extends AppCompatActivity{
         });
 
         mPlayer4.start();
+        mPlayer4.setVisibility(View.GONE);
     }
 
     public void startPlayingVideo5(){
-        String VOD_URL_5 = "android.resource://" + getPackageName() + "/" + R.raw.movie5;
-        mPlayer5 = findViewById(R.id.player_5);
-        mPlayer5.setUrl(VOD_URL_5);
         mPlayer5.setEnableAudioFocus(false);
         mPlayer5.setUsingSurfaceView(true);
         //        StandardVideoController controller2 = new StandardVideoController(this);
@@ -271,6 +278,11 @@ public class MainActivity extends AppCompatActivity{
                     case IjkVideoView.STATE_PREPARED:
                         break;
                     case IjkVideoView.STATE_PLAYING:
+                        mPlayer1.setVisibility(View.VISIBLE);
+                        mPlayer2.setVisibility(View.VISIBLE);
+                        mPlayer3.setVisibility(View.VISIBLE);
+                        mPlayer4.setVisibility(View.VISIBLE);
+                        mPlayer5.setVisibility(View.VISIBLE);
                         break;
                     case IjkVideoView.STATE_PAUSED:
                         break;
@@ -287,6 +299,7 @@ public class MainActivity extends AppCompatActivity{
         });
 
         mPlayer5.start();
+        mPlayer5.setVisibility(View.GONE);
     }
 
     @Override
