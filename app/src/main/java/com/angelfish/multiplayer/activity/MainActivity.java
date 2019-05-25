@@ -2,6 +2,7 @@ package com.angelfish.multiplayer.activity;
 
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -10,7 +11,11 @@ import android.view.WindowManager;
 
 import com.angelfish.multiplayer.R;
 import com.angelfish.videocontroller.StandardVideoController;
+import com.angelfish.videoplayer.listener.OnVideoViewStateChangeListener;
 import com.angelfish.videoplayer.player.IjkVideoView;
+
+import tv.danmaku.ijk.media.player.IMediaPlayer;
+
 
 public class MainActivity extends AppCompatActivity{
 
@@ -32,44 +37,252 @@ public class MainActivity extends AppCompatActivity{
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setTitle(R.string.str_multi_player);
-            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(false);
+            actionBar.hide();
         }
-
-        String VOD_URL = "android.resource://" + getPackageName() + "/" + R.raw.movie;
-
+        String VOD_URL_1 = "android.resource://" + getPackageName() + "/" + R.raw.movie;
         mPlayer1 = findViewById(R.id.player_1);
-        mPlayer1.setUrl(VOD_URL);
+        mPlayer1.setUrl(VOD_URL_1);
 
         mPlayer1.setEnableAudioFocus(false);
-        StandardVideoController controller1 = new StandardVideoController(this);
-        mPlayer1.setVideoController(controller1);
+//        StandardVideoController controller1 = new StandardVideoController(this);
+//        mPlayer1.setVideoController(controller1);
+                    //高级设置（可选，须在start()之前调用方可生效）
+        mPlayer1.setLooping(true);
 
+        mPlayer1.addOnVideoViewStateChangeListener(new OnVideoViewStateChangeListener() {
+            @Override
+            public void onPlayerStateChanged(int playerState) {
+                switch (playerState) {
+                    case IjkVideoView.PLAYER_NORMAL://小屏
+                        break;
+                    case IjkVideoView.PLAYER_FULL_SCREEN://全屏
+                        break;
+                }
+            }
+            @Override
+            public void onPlayStateChanged(int playState) {
+                switch (playState) {
+                    case IjkVideoView.STATE_IDLE:
+                        break;
+                    case IjkVideoView.STATE_PREPARING:
+                        break;
+                    case IjkVideoView.STATE_PREPARED:
+                        mPlayer1.start();
+                        break;
+                    case IjkVideoView.STATE_PLAYING:
+                        startPlayingVideo2();
+                        break;
+                    case IjkVideoView.STATE_PAUSED:
+                        break;
+                    case IjkVideoView.STATE_BUFFERING:
+                        break;
+                    case IjkVideoView.STATE_BUFFERED:
+                        break;
+                    case IjkVideoView.STATE_PLAYBACK_COMPLETED:
+                        break;
+                    case IjkVideoView.STATE_ERROR:
+                        break;
+                }
+            }
+        });
+
+        mPlayer1.start();
+    }
+
+    public void startPlayingVideo2(){
+        String VOD_URL_2 = "android.resource://" + getPackageName() + "/" + R.raw.movie2;
         mPlayer2 = findViewById(R.id.player_2);
-        mPlayer2.setUrl(VOD_URL);
+        mPlayer2.setUrl(VOD_URL_2);
         mPlayer2.setEnableAudioFocus(false);
-        StandardVideoController controller2 = new StandardVideoController(this);
-        mPlayer2.setVideoController(controller2);
+        //        StandardVideoController controller2 = new StandardVideoController(this);
+        //        mPlayer2.setVideoController(controller2);
+        mPlayer2.setLooping(true);
+        //        mPlayer2.setMute(true);
+        //        mPlayer2.start();
+        mPlayer2.addOnVideoViewStateChangeListener(new OnVideoViewStateChangeListener() {
+            @Override
+            public void onPlayerStateChanged(int playerState) {
+                switch (playerState) {
+                    case IjkVideoView.PLAYER_NORMAL://小屏
+                        break;
+                    case IjkVideoView.PLAYER_FULL_SCREEN://全屏
+                        break;
+                }
+            }
+            @Override
+            public void onPlayStateChanged(int playState) {
+                switch (playState) {
+                    case IjkVideoView.STATE_IDLE:
+                        break;
+                    case IjkVideoView.STATE_PREPARING:
+                        break;
+                    case IjkVideoView.STATE_PREPARED:
+                        break;
+                    case IjkVideoView.STATE_PLAYING:
+                        startPlayingVideo3();
+                        break;
+                    case IjkVideoView.STATE_PAUSED:
+                        break;
+                    case IjkVideoView.STATE_BUFFERING:
+                        break;
+                    case IjkVideoView.STATE_BUFFERED:
+                        break;
+                    case IjkVideoView.STATE_PLAYBACK_COMPLETED:
+                        break;
+                    case IjkVideoView.STATE_ERROR:
+                        break;
+                }
+            }
+        });
 
+        mPlayer2.start();
+    }
+
+    public void startPlayingVideo3(){
+        String VOD_URL_3 = "android.resource://" + getPackageName() + "/" + R.raw.movie3;
         mPlayer3 = findViewById(R.id.player_3);
-        mPlayer3.setUrl(VOD_URL);
-
+        mPlayer3.setUrl(VOD_URL_3);
         mPlayer3.setEnableAudioFocus(false);
-        StandardVideoController controller3 = new StandardVideoController(this);
-        mPlayer3.setVideoController(controller3);
+        //        StandardVideoController controller2 = new StandardVideoController(this);
+        //        mPlayer2.setVideoController(controller2);
+        mPlayer3.setLooping(true);
+        //        mPlayer2.setMute(true);
+        //        mPlayer2.start();
+        mPlayer3.addOnVideoViewStateChangeListener(new OnVideoViewStateChangeListener() {
+            @Override
+            public void onPlayerStateChanged(int playerState) {
+                switch (playerState) {
+                    case IjkVideoView.PLAYER_NORMAL://小屏
+                        break;
+                    case IjkVideoView.PLAYER_FULL_SCREEN://全屏
+                        break;
+                }
+            }
+            @Override
+            public void onPlayStateChanged(int playState) {
+                switch (playState) {
+                    case IjkVideoView.STATE_IDLE:
+                        break;
+                    case IjkVideoView.STATE_PREPARING:
+                        break;
+                    case IjkVideoView.STATE_PREPARED:
+                        break;
+                    case IjkVideoView.STATE_PLAYING:
+                        startPlayingVideo4();
+                        break;
+                    case IjkVideoView.STATE_PAUSED:
+                        break;
+                    case IjkVideoView.STATE_BUFFERING:
+                        break;
+                    case IjkVideoView.STATE_BUFFERED:
+                        break;
+                    case IjkVideoView.STATE_PLAYBACK_COMPLETED:
+                        break;
+                    case IjkVideoView.STATE_ERROR:
+                        break;
+                }
+            }
+        });
 
+        mPlayer3.start();
+    }
+
+    public void startPlayingVideo4(){
+        String VOD_URL_4 = "android.resource://" + getPackageName() + "/" + R.raw.movie4;
         mPlayer4 = findViewById(R.id.player_4);
-        mPlayer4.setUrl(VOD_URL);
-
+        mPlayer4.setUrl(VOD_URL_4);
         mPlayer4.setEnableAudioFocus(false);
-        StandardVideoController controller4 = new StandardVideoController(this);
-        mPlayer4.setVideoController(controller4);
+        //        StandardVideoController controller2 = new StandardVideoController(this);
+        //        mPlayer2.setVideoController(controller2);
+        mPlayer4.setLooping(true);
+        //        mPlayer2.setMute(true);
+        //        mPlayer2.start();
+        mPlayer4.addOnVideoViewStateChangeListener(new OnVideoViewStateChangeListener() {
+            @Override
+            public void onPlayerStateChanged(int playerState) {
+                switch (playerState) {
+                    case IjkVideoView.PLAYER_NORMAL://小屏
+                        break;
+                    case IjkVideoView.PLAYER_FULL_SCREEN://全屏
+                        break;
+                }
+            }
+            @Override
+            public void onPlayStateChanged(int playState) {
+                switch (playState) {
+                    case IjkVideoView.STATE_IDLE:
+                        break;
+                    case IjkVideoView.STATE_PREPARING:
+                        break;
+                    case IjkVideoView.STATE_PREPARED:
+                        break;
+                    case IjkVideoView.STATE_PLAYING:
+                        startPlayingVideo5();
+                        break;
+                    case IjkVideoView.STATE_PAUSED:
+                        break;
+                    case IjkVideoView.STATE_BUFFERING:
+                        break;
+                    case IjkVideoView.STATE_BUFFERED:
+                        break;
+                    case IjkVideoView.STATE_PLAYBACK_COMPLETED:
+                        break;
+                    case IjkVideoView.STATE_ERROR:
+                        break;
+                }
+            }
+        });
 
+        mPlayer4.start();
+    }
+
+    public void startPlayingVideo5(){
+        String VOD_URL_5 = "android.resource://" + getPackageName() + "/" + R.raw.movie5;
         mPlayer5 = findViewById(R.id.player_5);
-        mPlayer5.setUrl(VOD_URL);
-
+        mPlayer5.setUrl(VOD_URL_5);
         mPlayer5.setEnableAudioFocus(false);
-        StandardVideoController controller5 = new StandardVideoController(this);
-        mPlayer5.setVideoController(controller5);
+        //        StandardVideoController controller2 = new StandardVideoController(this);
+        //        mPlayer2.setVideoController(controller2);
+        mPlayer5.setLooping(true);
+        //        mPlayer2.setMute(true);
+        //        mPlayer2.start();
+        mPlayer5.addOnVideoViewStateChangeListener(new OnVideoViewStateChangeListener() {
+            @Override
+            public void onPlayerStateChanged(int playerState) {
+                switch (playerState) {
+                    case IjkVideoView.PLAYER_NORMAL://小屏
+                        break;
+                    case IjkVideoView.PLAYER_FULL_SCREEN://全屏
+                        break;
+                }
+            }
+            @Override
+            public void onPlayStateChanged(int playState) {
+                switch (playState) {
+                    case IjkVideoView.STATE_IDLE:
+                        break;
+                    case IjkVideoView.STATE_PREPARING:
+                        break;
+                    case IjkVideoView.STATE_PREPARED:
+                        break;
+                    case IjkVideoView.STATE_PLAYING:
+                        break;
+                    case IjkVideoView.STATE_PAUSED:
+                        break;
+                    case IjkVideoView.STATE_BUFFERING:
+                        break;
+                    case IjkVideoView.STATE_BUFFERED:
+                        break;
+                    case IjkVideoView.STATE_PLAYBACK_COMPLETED:
+                        break;
+                    case IjkVideoView.STATE_ERROR:
+                        break;
+                }
+            }
+        });
+
+        mPlayer5.start();
     }
 
     @Override
@@ -85,11 +298,6 @@ public class MainActivity extends AppCompatActivity{
     @Override
     protected void onResume() {
         super.onResume();
-        mPlayer1.resume();
-        mPlayer2.resume();
-        mPlayer3.pause();
-        mPlayer4.pause();
-        mPlayer5.pause();
     }
 
     @Override
