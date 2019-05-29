@@ -1,6 +1,7 @@
 package com.angelfish.multiplayer.activity;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -12,9 +13,11 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.angelfish.multiplayer.R;
 import com.angelfish.videocontroller.StandardVideoController;
@@ -33,10 +36,14 @@ public class MainActivity extends AppCompatActivity{
     private IjkVideoView mPlayer3;
     private IjkVideoView mPlayer4;
     private IjkVideoView mPlayer5;
+    static private int backpressed = 0;
+    private Context mContext;
+    private boolean mIsPaused = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mContext = this.getApplicationContext();
         isWriteStoragePermissionGranted();
         isReadStoragePermissionGranted();
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
@@ -66,53 +73,8 @@ public class MainActivity extends AppCompatActivity{
         mPlayer5 = findViewById(R.id.player_5);
         mPlayer5.setUrl(VOD_URL_5);
 
+        startPlayingVideo();
 
-        mPlayer1.setEnableAudioFocus(false);
-        mPlayer1.setUsingSurfaceView(true);
-//        StandardVideoController controller1 = new StandardVideoController(this);
-//        mPlayer1.setVideoController(controller1);
-                    //高级设置（可选，须在start()之前调用方可生效）
-        mPlayer1.setLooping(true);
-
-
-        mPlayer1.addOnVideoViewStateChangeListener(new OnVideoViewStateChangeListener() {
-            @Override
-            public void onPlayerStateChanged(int playerState) {
-                switch (playerState) {
-                    case IjkVideoView.PLAYER_NORMAL://小屏
-                        break;
-                    case IjkVideoView.PLAYER_FULL_SCREEN://全屏
-                        break;
-                }
-            }
-            @Override
-            public void onPlayStateChanged(int playState) {
-                switch (playState) {
-                    case IjkVideoView.STATE_IDLE:
-                        break;
-                    case IjkVideoView.STATE_PREPARING:
-                        break;
-                    case IjkVideoView.STATE_PREPARED:
-                        break;
-                    case IjkVideoView.STATE_PLAYING:
-                        startPlayingVideo2();
-                        break;
-                    case IjkVideoView.STATE_PAUSED:
-                        break;
-                    case IjkVideoView.STATE_BUFFERING:
-                        break;
-                    case IjkVideoView.STATE_BUFFERED:
-                        break;
-                    case IjkVideoView.STATE_PLAYBACK_COMPLETED:
-                        break;
-                    case IjkVideoView.STATE_ERROR:
-                        break;
-                }
-            }
-        });
-
-        mPlayer1.start();
-        mPlayer1.setVisibility(View.GONE);
     }
 
     public  boolean isReadStoragePermissionGranted() {
@@ -181,6 +143,54 @@ public class MainActivity extends AppCompatActivity{
         }
     }
 
+    public void startPlayingVideo(){
+        mPlayer1.setEnableAudioFocus(false);
+        mPlayer1.setUsingSurfaceView(true);
+//        StandardVideoController controller1 = new StandardVideoController(this);
+//        mPlayer1.setVideoController(controller1);
+        //高级设置（可选，须在start()之前调用方可生效）
+        mPlayer1.setLooping(true);
+
+
+        mPlayer1.addOnVideoViewStateChangeListener(new OnVideoViewStateChangeListener() {
+            @Override
+            public void onPlayerStateChanged(int playerState) {
+                switch (playerState) {
+                    case IjkVideoView.PLAYER_NORMAL://小屏
+                        break;
+                    case IjkVideoView.PLAYER_FULL_SCREEN://全屏
+                        break;
+                }
+            }
+            @Override
+            public void onPlayStateChanged(int playState) {
+                switch (playState) {
+                    case IjkVideoView.STATE_IDLE:
+                        break;
+                    case IjkVideoView.STATE_PREPARING:
+                        break;
+                    case IjkVideoView.STATE_PREPARED:
+                        break;
+                    case IjkVideoView.STATE_PLAYING:
+                        startPlayingVideo2();
+                        break;
+                    case IjkVideoView.STATE_PAUSED:
+                        break;
+                    case IjkVideoView.STATE_BUFFERING:
+                        break;
+                    case IjkVideoView.STATE_BUFFERED:
+                        break;
+                    case IjkVideoView.STATE_PLAYBACK_COMPLETED:
+                        break;
+                    case IjkVideoView.STATE_ERROR:
+                        break;
+                }
+            }
+        });
+
+        mPlayer1.start();
+        mPlayer1.setVisibility(View.GONE);
+    }
     public void startPlayingVideo2(){
         mPlayer2.setEnableAudioFocus(false);
         mPlayer2.setUsingSurfaceView(true);
@@ -385,10 +395,20 @@ public class MainActivity extends AppCompatActivity{
         mPlayer3.pause();
         mPlayer4.pause();
         mPlayer5.pause();
+        mIsPaused = true;
     }
 
     @Override
     protected void onResume() {
+        if(mIsPaused){
+            mPlayer1.release();
+            mPlayer2.release();
+            mPlayer3.release();
+            mPlayer4.release();
+            mPlayer5.release();
+            startPlayingVideo();
+            mIsPaused = false;
+        }
         super.onResume();
     }
 
@@ -400,5 +420,24 @@ public class MainActivity extends AppCompatActivity{
         mPlayer3.release();
         mPlayer4.release();
         mPlayer5.release();
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        backpressed ++;
+        if(backpressed < 2) {
+            Toast.makeText(mContext, R.string.str_press_again_hint, Toast.LENGTH_LONG).show();
+            return;
+        }
+        backpressed = 0;
+        // code here to show dialog
+        super.onBackPressed();  // optional depending on your needs
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        Toast.makeText(mContext, "popup menu!!!", Toast.LENGTH_LONG).show();
+        return super.onPrepareOptionsMenu(menu);
     }
 }

@@ -34,4 +34,5 @@
     <string name="str_start_pip">PiP</string>
     <string name="str_cache">CACHE</string>
     <string name="str_play_list">PLAY LIST</string>
+    <string name="str_press_again_hint">Press Back key again to exit!</string>
 </resources>
