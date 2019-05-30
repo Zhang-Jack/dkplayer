@@ -12,9 +12,11 @@ import android.support.annotation.RequiresPermission;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.PopupMenu;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -441,6 +443,21 @@ public class MainActivity extends AppCompatActivity{
             return true;
         }else if (keyCode == KeyEvent.KEYCODE_MENU){
             Toast.makeText(mContext, "POPUP MENU", Toast.LENGTH_SHORT).show();
+            PopupMenu popup = new PopupMenu(MainActivity.this, mPlayer1);
+            //Inflating the Popup using xml file
+            popup.getMenuInflater().inflate(R.menu.main_menu, popup.getMenu());
+
+            //registering popup with OnMenuItemClickListener
+            popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                public boolean onMenuItemClick(MenuItem item) {
+                    Toast.makeText(MainActivity.this,"You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
+                    return true;
+                }
+            });
+
+            popup.show();//showing popup menu
+            super.onKeyDown(keyCode, event);
+            return true;
         }
         return false;
     }
