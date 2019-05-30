@@ -13,6 +13,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
 import android.view.Window;
@@ -422,22 +423,27 @@ public class MainActivity extends AppCompatActivity{
         mPlayer5.release();
     }
 
-    @Override
-    public void onBackPressed()
-    {
-        backpressed ++;
-        if(backpressed < 2) {
-            Toast.makeText(mContext, R.string.str_press_again_hint, Toast.LENGTH_LONG).show();
-            return;
-        }
-        backpressed = 0;
-        // code here to show dialog
-        super.onBackPressed();  // optional depending on your needs
-    }
+
 
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        Toast.makeText(mContext, "popup menu!!!", Toast.LENGTH_LONG).show();
-        return super.onPrepareOptionsMenu(menu);
+    public boolean onKeyDown(int keyCode, KeyEvent event){
+        String keycode_hint = "keyCode = "+keyCode;
+        Log.i(TAG, keycode_hint);
+//        Toast.makeText(mContext, keycode_hint,Toast.LENGTH_SHORT).show();
+        if(keyCode == KeyEvent.KEYCODE_BACK){
+            backpressed ++;
+            if(backpressed < 2) {
+                Toast.makeText(mContext, R.string.str_press_again_hint, Toast.LENGTH_SHORT).show();
+                return true;
+            }
+            backpressed = 0;
+            super.onKeyDown(keyCode, event);
+            return true;
+        }else if (keyCode == KeyEvent.KEYCODE_MENU){
+            Toast.makeText(mContext, "POPUP MENU", Toast.LENGTH_SHORT).show();
+        }
+        return false;
     }
+
+
 }
