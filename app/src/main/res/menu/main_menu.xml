@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:id="@+id/close_float_window"
-        android:title="关闭悬浮窗"/>
-    <item android:id="@+id/clear_cache"
-        android:title="清除缓存">
-
+    <item android:id="@+id/update_ads"
+        android:title="@string/str_update_ads"/>
+    <item android:id="@+id/change_layout"
+        android:title="@string/str_change_layout"/>
+    <item android:id="@+id/version_info"
+        android:title="@string/str_version_info">
     </item>
 </menu>

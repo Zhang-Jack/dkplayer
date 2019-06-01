@@ -43,4 +43,7 @@
     <string name="str_cache">缓存</string>
     <string name="str_play_list">连续播放一个列表</string>
     <string name="str_press_again_hint">再按一次退出应用!</string>
+    <string name="str_update_ads">更新广告</string>
+    <string name="str_change_layout">变更布局</string>
+    <string name="str_version_info">版本信息</string>
 </resources>

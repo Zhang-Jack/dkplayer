@@ -35,4 +35,7 @@
     <string name="str_cache">CACHE</string>
     <string name="str_play_list">PLAY LIST</string>
     <string name="str_press_again_hint">Press Back key again to exit!</string>
+    <string name="str_update_ads">Update Advertisements</string>
+    <string name="str_change_layout">Change Layout</string>
+    <string name="str_version_info">Version Info</string>
 </resources>

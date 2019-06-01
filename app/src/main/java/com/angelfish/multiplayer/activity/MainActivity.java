@@ -2,6 +2,7 @@ package com.angelfish.multiplayer.activity;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -11,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresPermission;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
 import android.util.Log;
@@ -26,6 +28,7 @@ import com.angelfish.multiplayer.R;
 import com.angelfish.videocontroller.StandardVideoController;
 import com.angelfish.videoplayer.listener.OnVideoViewStateChangeListener;
 import com.angelfish.videoplayer.player.IjkVideoView;
+import com.angelfish.multiplayer.BuildConfig;
 
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 
@@ -42,6 +45,7 @@ public class MainActivity extends AppCompatActivity{
     static private int backpressed = 0;
     private Context mContext;
     private boolean mIsPaused = false;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -442,14 +446,40 @@ public class MainActivity extends AppCompatActivity{
             super.onKeyDown(keyCode, event);
             return true;
         }else if (keyCode == KeyEvent.KEYCODE_MENU){
-            Toast.makeText(mContext, "POPUP MENU", Toast.LENGTH_SHORT).show();
-            PopupMenu popup = new PopupMenu(MainActivity.this, mPlayer1);
+//            Toast.makeText(mContext, "POPUP MENU", Toast.LENGTH_SHORT).show();
+            PopupMenu popup = new PopupMenu(MainActivity.this, mPlayer2);
             //Inflating the Popup using xml file
             popup.getMenuInflater().inflate(R.menu.main_menu, popup.getMenu());
 
             //registering popup with OnMenuItemClickListener
             popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                 public boolean onMenuItemClick(MenuItem item) {
+                    if(item.getItemId()==R.id.update_ads){
+
+                    }else if(item.getItemId()==R.id.change_layout){
+
+                    }else if(item.getItemId() == R.id.version_info){
+                        int versionCode = BuildConfig.VERSION_CODE;
+                        String versionName = BuildConfig.VERSION_NAME;
+                        AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+                        alertDialog.setTitle(R.string.str_version_info);
+                        alertDialog.setMessage(versionName);
+                        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                        alertDialog.show();
+//                        builder = new AlertDialog.Builder(mContext);
+//                        builder.setTitle(R.string.str_version_info);
+//                        int versionCode = BuildConfig.VERSION_CODE;
+//                        String versionName = BuildConfig.VERSION_NAME;
+//                        builder.setMessage("versionCode = "+versionCode+"\n versionName ="+versionName);
+//                        AlertDialog alert = builder.create();
+//                        alert.setTitle(R.string.str_version_info);
+//                        alert.show();
+                    }
                     Toast.makeText(MainActivity.this,"You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
                     return true;
                 }
