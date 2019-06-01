@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -29,6 +30,18 @@ import com.angelfish.videocontroller.StandardVideoController;
 import com.angelfish.videoplayer.listener.OnVideoViewStateChangeListener;
 import com.angelfish.videoplayer.player.IjkVideoView;
 import com.angelfish.multiplayer.BuildConfig;
+import com.google.android.exoplayer2.offline.Downloader;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 
@@ -79,7 +92,7 @@ public class MainActivity extends AppCompatActivity{
         String VOD_URL_5 = "android.resource://" + getPackageName() + "/" + R.raw.movie5;
         mPlayer5 = findViewById(R.id.player_5);
         mPlayer5.setUrl(VOD_URL_5);
-
+        checkForUpdateAds();
         startPlayingVideo();
 
     }
@@ -455,7 +468,7 @@ public class MainActivity extends AppCompatActivity{
             popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                 public boolean onMenuItemClick(MenuItem item) {
                     if(item.getItemId()==R.id.update_ads){
-
+                        checkForUpdateAds();
                     }else if(item.getItemId()==R.id.change_layout){
 
                     }else if(item.getItemId() == R.id.version_info){
@@ -490,6 +503,61 @@ public class MainActivity extends AppCompatActivity{
             return true;
         }
         return false;
+    }
+
+    public void checkForUpdateAds(){
+        try{
+        URL test_link = new URL("http://projector.auong.com/i/r/201906011836258919.mp4");
+        new DownloadFilesTask().execute(test_link);
+        }catch(MalformedURLException ex){
+            ex.printStackTrace();
+        }
+    }
+
+    private class DownloadFilesTask extends AsyncTask<URL, Integer, Long> {
+        protected Long doInBackground(URL... urls) {
+            int count = urls.length;
+            long totalSize = 0;
+            try{
+                for (int i = 0; i < count; i++) {
+                    URLConnection conexion = urls[i].openConnection();
+                    conexion.connect();
+
+                    int lenghtOfFile = conexion.getContentLength();
+                    Log.d(TAG, "Lenght of file: " + lenghtOfFile);
+                    totalSize += lenghtOfFile;
+
+                    InputStream input = new BufferedInputStream(conexion.getInputStream());
+                    OutputStream output = new FileOutputStream("/sdcard/temp.mp4");
+                    Log.d(TAG, "save to temp ");
+                    byte data[] = new byte[1024];
+
+                    long total = 0;
+
+                    while ((count = input.read(data)) != -1) {
+                        total += count;
+                        Log.d(TAG, "downlaod bytes: " + total);
+                        publishProgress((int)((total*100)/lenghtOfFile));
+                        output.write(data, 0, count);
+                    }
+
+                    output.flush();
+                    output.close();
+                    input.close();
+                }
+            }catch(Exception e){
+                return null;
+            }
+            return totalSize;
+        }
+
+        protected void onProgressUpdate(Integer... progress) {
+//            setProgressPercent(progress[0]);
+        }
+
+        protected void onPostExecute(Long result) {
+//            showDialog("Downloaded " + result + " bytes");
+        }
     }
 
 
