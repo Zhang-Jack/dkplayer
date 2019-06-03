@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.icu.text.SimpleDateFormat;
+
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -30,7 +32,9 @@ import com.angelfish.videocontroller.StandardVideoController;
 import com.angelfish.videoplayer.listener.OnVideoViewStateChangeListener;
 import com.angelfish.videoplayer.player.IjkVideoView;
 import com.angelfish.multiplayer.BuildConfig;
+import com.angelfish.multiplayer.util.AddressUtils;
 import com.google.android.exoplayer2.offline.Downloader;
+import com.google.gson.JsonParser;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -42,8 +46,15 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.DateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 import tv.danmaku.ijk.media.player.IMediaPlayer;
+import android.provider.Settings.Secure;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 public class MainActivity extends AppCompatActivity{
@@ -93,6 +104,7 @@ public class MainActivity extends AppCompatActivity{
         mPlayer5 = findViewById(R.id.player_5);
         mPlayer5.setUrl(VOD_URL_5);
         checkForUpdateAds();
+
         startPlayingVideo();
 
     }
@@ -506,12 +518,34 @@ public class MainActivity extends AppCompatActivity{
     }
 
     public void checkForUpdateAds(){
+        String android_id = Secure.getString(mContext.getContentResolver(),
+                Secure.ANDROID_ID);
+        int versionCode = BuildConfig.VERSION_CODE;
+        String versionName = BuildConfig.VERSION_NAME;
+        String IPAddress = AddressUtils.getIPAddress(true);
+        long timestamp = Calendar.getInstance().getTimeInMillis();
+        String ativate_string = "http://projector.auong.com/?act=api/device!activate&device_id="+android_id+"&version_code="+versionCode+"&version_name="+versionName+"&address="+IPAddress+"&timestamp="+timestamp;
+        Log.e(TAG, ativate_string);
         try{
-        URL test_link = new URL("http://projector.auong.com/i/r/201906011836258919.mp4");
-        new DownloadFilesTask().execute(test_link);
+            URL ativate_link = new URL(ativate_string);
+            new GetTokenTask().execute(ativate_link);
+
+
         }catch(MalformedURLException ex){
             ex.printStackTrace();
         }
+        return;
+//        try{
+//        URL test_link = new URL("http://projector.auong.com/i/r/201906011836258919.mp4");
+//        new DownloadFilesTask().execute(test_link);
+//        }catch(MalformedURLException ex){
+//            ex.printStackTrace();
+//        }
+    }
+
+    public String getTimestamp() {
+        String timestamp = DateFormat.getDateTimeInstance().format(new Date());
+        return timestamp;
     }
 
     private class DownloadFilesTask extends AsyncTask<URL, Integer, Long> {
@@ -560,5 +594,46 @@ public class MainActivity extends AppCompatActivity{
         }
     }
 
+    private class GetTokenTask extends AsyncTask<URL, Integer, JSONObject> {
+        protected JSONObject doInBackground(URL... urls) {
+            int count = urls.length;
 
+            try{
+                for (int i = 0; i < count; i++) {
+                    URLConnection conexion = urls[i].openConnection();
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(conexion.getInputStream()));
+
+                    StringBuffer stringBuffer = new StringBuffer();
+                    String line;
+                    while ((line = bufferedReader.readLine()) != null)
+                    {
+                        stringBuffer.append(line);
+                    }
+
+                    return new JSONObject(stringBuffer.toString());
+                }
+            }catch(Exception ex){
+                ex.printStackTrace();
+                return null;
+            }
+            return null;
+        }
+
+        protected void onProgressUpdate(Integer... progress) {
+//            setProgressPercent(progress[0]);
+        }
+
+        protected void onPostExecute(JSONObject response) {
+//            showDialog("Downloaded " + result + " bytes");
+            if(response != null)
+            {
+                try {
+                    Log.e(TAG, "Success: " + response.getString("token") );
+                } catch (JSONException ex) {
+                    Log.e(TAG, "Failure", ex);
+                }
+            }
+        }
+
+    }
 }
