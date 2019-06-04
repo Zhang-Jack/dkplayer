@@ -28,6 +28,7 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.angelfish.multiplayer.R;
+import com.angelfish.multiplayer.bean.VideoBean;
 import com.angelfish.videocontroller.StandardVideoController;
 import com.angelfish.videoplayer.listener.OnVideoViewStateChangeListener;
 import com.angelfish.videoplayer.player.IjkVideoView;
@@ -591,6 +592,14 @@ public class MainActivity extends AppCompatActivity{
 
         protected void onPostExecute(Long result) {
 //            showDialog("Downloaded " + result + " bytes");
+            Toast.makeText(mContext,"Download finished!", Toast.LENGTH_LONG).show();
+            mPlayer1.release();
+            //重新设置数据
+            mPlayer1.setUrl("/sdcard/temp.mp4");
+
+//            mPlayer1.setVideoController(mStandardVideoController);
+            //开始播放
+            mPlayer1.start();
         }
     }
 
@@ -628,7 +637,61 @@ public class MainActivity extends AppCompatActivity{
             if(response != null)
             {
                 try {
-                    Log.e(TAG, "Success: " + response.getString("token") );
+                    String token = response.getString("token");
+                    String resource_string = "http://projector.auong.com/?act=api/resource&type=1&token="+token;
+                    try {
+                        URL resource_link = new URL(resource_string);
+                        new GetVideoJsonTask().execute(resource_link);
+                        Log.e(TAG, "Success: " + token);
+                    }catch(MalformedURLException ex){
+                    ex.printStackTrace();
+                }
+
+                } catch (JSONException ex) {
+                    Log.e(TAG, "Failure", ex);
+                }
+            }
+        }
+
+    }
+
+    private class GetVideoJsonTask extends AsyncTask<URL, Integer, JSONObject> {
+        protected JSONObject doInBackground(URL... urls) {
+            int count = urls.length;
+
+            try{
+                for (int i = 0; i < count; i++) {
+                    URLConnection conexion = urls[i].openConnection();
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(conexion.getInputStream()));
+
+                    StringBuffer stringBuffer = new StringBuffer();
+                    String line;
+                    while ((line = bufferedReader.readLine()) != null)
+                    {
+                        stringBuffer.append(line);
+                    }
+
+                    return new JSONObject(stringBuffer.toString());
+                }
+            }catch(Exception ex){
+                ex.printStackTrace();
+                return null;
+            }
+            return null;
+        }
+
+        protected void onProgressUpdate(Integer... progress) {
+//            setProgressPercent(progress[0]);
+        }
+
+        protected void onPostExecute(JSONObject response) {
+//            showDialog("Downloaded " + result + " bytes");
+            if(response != null)
+            {
+                try {
+                    String token = response.getString("data");
+                    Log.e(TAG, "Success: " + token );
+
                 } catch (JSONException ex) {
                     Log.e(TAG, "Failure", ex);
                 }
