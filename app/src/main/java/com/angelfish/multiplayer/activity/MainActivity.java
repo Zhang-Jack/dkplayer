@@ -10,6 +10,7 @@ import android.icu.text.SimpleDateFormat;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresPermission;
@@ -39,6 +40,7 @@ import com.google.gson.JsonParser;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -48,8 +50,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 import android.provider.Settings.Secure;
@@ -70,7 +74,11 @@ public class MainActivity extends AppCompatActivity{
     static private int backpressed = 0;
     private Context mContext;
     private boolean mIsPaused = false;
-
+    private List<String> mFileList_1 = new ArrayList<>();
+    private List<String> mFileList_2 = new ArrayList<>();
+    private List<String> mFileList_3 = new ArrayList<>();
+    private List<String> mFileList_4 = new ArrayList<>();
+    private List<String> mFileList_5 = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -104,9 +112,37 @@ public class MainActivity extends AppCompatActivity{
         String VOD_URL_5 = "android.resource://" + getPackageName() + "/" + R.raw.movie5;
         mPlayer5 = findViewById(R.id.player_5);
         mPlayer5.setUrl(VOD_URL_5);
+        checkForUpdateResources();
         checkForUpdateAds();
 
         startPlayingVideo();
+
+    }
+
+    public void checkForUpdateResources(){
+        File f = new File(Environment.getExternalStorageDirectory() + "/MultiPlayer");
+        if (!f.exists()){
+            f.mkdir();
+        }
+        File dir1 = new File(f.getPath()+"/Player1/");
+        if (!dir1.exists()){
+            dir1.mkdir();
+        }else{
+            File[] files = dir1.listFiles();
+
+            for (int i = 0; i < files.length; i++)
+            {
+                mFileList_1.add(dir1.getAbsolutePath()+files[i].getName());
+
+            }
+            if (mFileList_1.size()> 0)
+            {
+                mPlayer1.setUrl(mFileList_1.get(0));
+                Log.i(TAG, "setting video url to sdcard resources!");
+            }else{
+                Toast.makeText(mContext, "No file found in the dir!!", Toast.LENGTH_LONG).show();
+            }
+        }
 
     }
 
