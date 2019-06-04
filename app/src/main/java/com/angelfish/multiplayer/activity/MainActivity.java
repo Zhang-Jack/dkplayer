@@ -132,7 +132,7 @@ public class MainActivity extends AppCompatActivity{
 
             for (int i = 0; i < files.length; i++)
             {
-                mFileList_1.add(dir1.getAbsolutePath()+files[i].getName());
+                mFileList_1.add(dir1.getAbsolutePath()+"/"+files[i].getName());
 
             }
             if (mFileList_1.size()> 0)
