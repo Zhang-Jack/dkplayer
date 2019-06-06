@@ -58,6 +58,7 @@ import java.util.List;
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 import android.provider.Settings.Secure;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -121,27 +122,21 @@ public class MainActivity extends AppCompatActivity{
 
     public void checkForUpdateResources(){
         File f = new File(Environment.getExternalStorageDirectory() + "/MultiPlayer");
-        if (!f.exists()){
-            f.mkdir();
-        }
+        AddressUtils.checkFilePath(f);
         File dir1 = new File(f.getPath()+"/Player1/");
-        if (!dir1.exists()){
-            dir1.mkdir();
-        }else{
-            File[] files = dir1.listFiles();
+        AddressUtils.checkFilePath(dir1);
+        File[] files = dir1.listFiles();
 
-            for (int i = 0; i < files.length; i++)
-            {
+        for (int i = 0; i < files.length; i++){
                 mFileList_1.add(dir1.getAbsolutePath()+"/"+files[i].getName());
 
-            }
-            if (mFileList_1.size()> 0)
-            {
+        }
+        if (mFileList_1.size()> 0)
+        {
                 mPlayer1.setUrl(mFileList_1.get(0));
                 Log.i(TAG, "setting video url to sdcard resources!");
-            }else{
+        }else{
                 Toast.makeText(mContext, "No file found in the dir!!", Toast.LENGTH_LONG).show();
-            }
         }
 
     }
@@ -725,8 +720,18 @@ public class MainActivity extends AppCompatActivity{
             if(response != null)
             {
                 try {
-                    String token = response.getString("data");
-                    Log.e(TAG, "Success: " + token );
+                    String video_info_str = response.getString("data");
+                    JSONArray video_info = new JSONArray(video_info_str);
+                    for (int i = 0; i < video_info.length(); i++){
+                        JSONObject video = video_info.getJSONObject(i);
+                        String id = video.getString("id");
+                        String name = video.getString("name");
+                        String remote_url = video.getString("url");
+                        Log.i(TAG, "id ="+id);
+                        Log.i(TAG, "name ="+name);
+                        Log.i(TAG, "url ="+remote_url);
+                    }
+                    Log.e(TAG, "Success: " + video_info );
 
                 } catch (JSONException ex) {
                     Log.e(TAG, "Failure", ex);

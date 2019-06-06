@@ -121,4 +121,10 @@ public class AddressUtils {
         return "";
     }
 
+    public static void checkFilePath(File path) {
+        if(!path.exists()){
+            path.mkdir();
+        }
+    }
+
 }
