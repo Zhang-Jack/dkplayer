@@ -80,6 +80,12 @@ public class MainActivity extends AppCompatActivity{
     private List<String> mFileList_3 = new ArrayList<>();
     private List<String> mFileList_4 = new ArrayList<>();
     private List<String> mFileList_5 = new ArrayList<>();
+    private int mPlayer_index1 = 0;
+//    private final String VOD_URL_1 = "android.resource://" + getPackageName() + "/" + R.raw.movie;
+//    private final String VOD_URL_2 = "android.resource://" + getPackageName() + "/" + R.raw.movie2;
+//    private final String VOD_URL_3 = "android.resource://" + getPackageName() + "/" + R.raw.movie3;
+//    private final String VOD_URL_4 = "android.resource://" + getPackageName() + "/" + R.raw.movie4;
+//    private final String VOD_URL_5 = "android.resource://" + getPackageName() + "/" + R.raw.movie5;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -113,6 +119,12 @@ public class MainActivity extends AppCompatActivity{
         String VOD_URL_5 = "android.resource://" + getPackageName() + "/" + R.raw.movie5;
         mPlayer5 = findViewById(R.id.player_5);
         mPlayer5.setUrl(VOD_URL_5);
+        mFileList_1.add(VOD_URL_1);
+        mFileList_1.add(VOD_URL_2);
+        mFileList_1.add(VOD_URL_3);
+        mFileList_1.add(VOD_URL_4);
+        mFileList_1.add(VOD_URL_5);
+
         checkForUpdateResources();
         checkForUpdateAds();
 
@@ -121,6 +133,12 @@ public class MainActivity extends AppCompatActivity{
     }
 
     public void checkForUpdateResources(){
+//        File assets = new File("android.resource://" + getPackageName() + "/");
+//        File[] default_movies = assets.listFiles();
+//        for (int i = 0; i < default_movies.size(); i++){
+//            mFileList_1.add(assets.getAbsolutePath()+"/"+default_movies[i].getName());
+//
+//        }
         File f = new File(Environment.getExternalStorageDirectory() + "/MultiPlayer");
         AddressUtils.checkFilePath(f);
         File dir1 = new File(f.getPath()+"/Player1/");
@@ -133,7 +151,7 @@ public class MainActivity extends AppCompatActivity{
         }
         if (mFileList_1.size()> 0)
         {
-                mPlayer1.setUrl(mFileList_1.get(0));
+//                mPlayer1.setUrl(mFileList_1.get(0));
                 Log.i(TAG, "setting video url to sdcard resources!");
         }else{
                 Toast.makeText(mContext, "No file found in the dir!!", Toast.LENGTH_LONG).show();
@@ -213,7 +231,7 @@ public class MainActivity extends AppCompatActivity{
 //        StandardVideoController controller1 = new StandardVideoController(this);
 //        mPlayer1.setVideoController(controller1);
         //高级设置（可选，须在start()之前调用方可生效）
-        mPlayer1.setLooping(true);
+//        mPlayer1.setLooping(true);
 
 
         mPlayer1.addOnVideoViewStateChangeListener(new OnVideoViewStateChangeListener() {
@@ -245,6 +263,26 @@ public class MainActivity extends AppCompatActivity{
                     case IjkVideoView.STATE_BUFFERED:
                         break;
                     case IjkVideoView.STATE_PLAYBACK_COMPLETED:
+                        mPlayer_index1 ++;
+                        if(mPlayer_index1 >=mFileList_1.size())
+                            mPlayer_index1 = 0;
+                        mPlayer1.release();
+                        mPlayer2.release();
+                        mPlayer3.release();
+                        mPlayer4.release();
+                        mPlayer5.release();
+//                        mPlayer1 = findViewById(R.id.player_1);
+                        mPlayer1.setUrl(mFileList_1.get((mPlayer_index1+1)%5));
+                        mPlayer2.setUrl(mFileList_1.get((mPlayer_index1+2)%5));
+                        mPlayer3.setUrl(mFileList_1.get((mPlayer_index1+3)%5));
+                        mPlayer4.setUrl(mFileList_1.get((mPlayer_index1+4)%5));
+                        mPlayer5.setUrl(mFileList_1.get((mPlayer_index1+5)%5));
+                        mPlayer1.start();
+                        mPlayer2.start();
+                        mPlayer3.start();
+                        mPlayer4.start();
+                        mPlayer5.start();
+
                         break;
                     case IjkVideoView.STATE_ERROR:
                         break;
@@ -260,7 +298,7 @@ public class MainActivity extends AppCompatActivity{
         mPlayer2.setUsingSurfaceView(true);
         //        StandardVideoController controller2 = new StandardVideoController(this);
         //        mPlayer2.setVideoController(controller2);
-        mPlayer2.setLooping(true);
+//        mPlayer2.setLooping(true);
         //        mPlayer2.setMute(true);
         //        mPlayer2.start();
         mPlayer2.addOnVideoViewStateChangeListener(new OnVideoViewStateChangeListener() {
@@ -308,7 +346,7 @@ public class MainActivity extends AppCompatActivity{
         mPlayer3.setUsingSurfaceView(true);
         //        StandardVideoController controller2 = new StandardVideoController(this);
         //        mPlayer2.setVideoController(controller2);
-        mPlayer3.setLooping(true);
+//        mPlayer3.setLooping(true);
         //        mPlayer2.setMute(true);
         //        mPlayer2.start();
         mPlayer3.addOnVideoViewStateChangeListener(new OnVideoViewStateChangeListener() {
@@ -356,7 +394,7 @@ public class MainActivity extends AppCompatActivity{
         mPlayer4.setUsingSurfaceView(true);
         //        StandardVideoController controller2 = new StandardVideoController(this);
         //        mPlayer2.setVideoController(controller2);
-        mPlayer4.setLooping(true);
+//        mPlayer4.setLooping(true);
         //        mPlayer2.setMute(true);
         //        mPlayer2.start();
         mPlayer4.addOnVideoViewStateChangeListener(new OnVideoViewStateChangeListener() {
@@ -404,7 +442,7 @@ public class MainActivity extends AppCompatActivity{
         mPlayer5.setUsingSurfaceView(true);
         //        StandardVideoController controller2 = new StandardVideoController(this);
         //        mPlayer2.setVideoController(controller2);
-        mPlayer5.setLooping(true);
+//        mPlayer5.setLooping(true);
         //        mPlayer2.setMute(true);
         //        mPlayer2.start();
         mPlayer5.addOnVideoViewStateChangeListener(new OnVideoViewStateChangeListener() {
