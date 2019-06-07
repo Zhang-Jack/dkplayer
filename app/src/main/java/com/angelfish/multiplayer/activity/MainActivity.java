@@ -63,6 +63,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 
+
 public class MainActivity extends AppCompatActivity{
 
     static final String TAG = "MultiPlayer";
@@ -81,6 +82,10 @@ public class MainActivity extends AppCompatActivity{
     private List<String> mFileList_4 = new ArrayList<>();
     private List<String> mFileList_5 = new ArrayList<>();
     private int mPlayer_index1 = 0;
+    private int mPlayer_index2 = 0;
+    private int mPlayer_index3 = 0;
+    private int mPlayer_index4 = 0;
+    private int mPlayer_index5 = 0;
 //    private final String VOD_URL_1 = "android.resource://" + getPackageName() + "/" + R.raw.movie;
 //    private final String VOD_URL_2 = "android.resource://" + getPackageName() + "/" + R.raw.movie2;
 //    private final String VOD_URL_3 = "android.resource://" + getPackageName() + "/" + R.raw.movie3;
@@ -107,6 +112,7 @@ public class MainActivity extends AppCompatActivity{
         String VOD_URL_1 = "android.resource://" + getPackageName() + "/" + R.raw.movie;
         mPlayer1 = findViewById(R.id.player_1);
         mPlayer1.setUrl(VOD_URL_1);
+
         String VOD_URL_2 = "android.resource://" + getPackageName() + "/" + R.raw.movie2;
         mPlayer2 = findViewById(R.id.player_2);
         mPlayer2.setUrl(VOD_URL_2);
@@ -124,6 +130,31 @@ public class MainActivity extends AppCompatActivity{
         mFileList_1.add(VOD_URL_3);
         mFileList_1.add(VOD_URL_4);
         mFileList_1.add(VOD_URL_5);
+
+        mFileList_2.add(VOD_URL_2);
+        mFileList_2.add(VOD_URL_3);
+        mFileList_2.add(VOD_URL_4);
+        mFileList_2.add(VOD_URL_5);
+        mFileList_2.add(VOD_URL_1);
+
+        mFileList_3.add(VOD_URL_3);
+        mFileList_3.add(VOD_URL_4);
+        mFileList_3.add(VOD_URL_5);
+        mFileList_3.add(VOD_URL_1);
+        mFileList_3.add(VOD_URL_2);
+
+        mFileList_4.add(VOD_URL_4);
+        mFileList_4.add(VOD_URL_5);
+        mFileList_4.add(VOD_URL_1);
+        mFileList_4.add(VOD_URL_2);
+        mFileList_4.add(VOD_URL_3);
+
+
+        mFileList_5.add(VOD_URL_5);
+        mFileList_5.add(VOD_URL_1);
+        mFileList_5.add(VOD_URL_2);
+        mFileList_5.add(VOD_URL_3);
+        mFileList_5.add(VOD_URL_4);
 
         checkForUpdateResources();
         checkForUpdateAds();
@@ -227,7 +258,7 @@ public class MainActivity extends AppCompatActivity{
 
     public void startPlayingVideo(){
         mPlayer1.setEnableAudioFocus(false);
-        mPlayer1.setUsingSurfaceView(true);
+        mPlayer1.setUsingSurfaceView(false);
 //        StandardVideoController controller1 = new StandardVideoController(this);
 //        mPlayer1.setVideoController(controller1);
         //高级设置（可选，须在start()之前调用方可生效）
@@ -267,21 +298,8 @@ public class MainActivity extends AppCompatActivity{
                         if(mPlayer_index1 >=mFileList_1.size())
                             mPlayer_index1 = 0;
                         mPlayer1.release();
-                        mPlayer2.release();
-                        mPlayer3.release();
-                        mPlayer4.release();
-                        mPlayer5.release();
-//                        mPlayer1 = findViewById(R.id.player_1);
-                        mPlayer1.setUrl(mFileList_1.get((mPlayer_index1+1)%5));
-                        mPlayer2.setUrl(mFileList_1.get((mPlayer_index1+2)%5));
-                        mPlayer3.setUrl(mFileList_1.get((mPlayer_index1+3)%5));
-                        mPlayer4.setUrl(mFileList_1.get((mPlayer_index1+4)%5));
-                        mPlayer5.setUrl(mFileList_1.get((mPlayer_index1+5)%5));
+                        mPlayer1.setUrl(mFileList_1.get(mPlayer_index1));
                         mPlayer1.start();
-                        mPlayer2.start();
-                        mPlayer3.start();
-                        mPlayer4.start();
-                        mPlayer5.start();
 
                         break;
                     case IjkVideoView.STATE_ERROR:
@@ -295,7 +313,7 @@ public class MainActivity extends AppCompatActivity{
     }
     public void startPlayingVideo2(){
         mPlayer2.setEnableAudioFocus(false);
-        mPlayer2.setUsingSurfaceView(true);
+        mPlayer2.setUsingSurfaceView(false);
         //        StandardVideoController controller2 = new StandardVideoController(this);
         //        mPlayer2.setVideoController(controller2);
 //        mPlayer2.setLooping(true);
@@ -330,6 +348,13 @@ public class MainActivity extends AppCompatActivity{
                     case IjkVideoView.STATE_BUFFERED:
                         break;
                     case IjkVideoView.STATE_PLAYBACK_COMPLETED:
+                        mPlayer_index2 ++;
+                        if(mPlayer_index2 >=mFileList_2.size())
+                            mPlayer_index2 = 0;
+                        mPlayer2.release();
+                        mPlayer2.setUrl(mFileList_2.get(mPlayer_index2));
+                        mPlayer2.start();
+
                         break;
                     case IjkVideoView.STATE_ERROR:
                         break;
@@ -343,7 +368,7 @@ public class MainActivity extends AppCompatActivity{
 
     public void startPlayingVideo3(){
         mPlayer3.setEnableAudioFocus(false);
-        mPlayer3.setUsingSurfaceView(true);
+        mPlayer3.setUsingSurfaceView(false);
         //        StandardVideoController controller2 = new StandardVideoController(this);
         //        mPlayer2.setVideoController(controller2);
 //        mPlayer3.setLooping(true);
@@ -378,6 +403,12 @@ public class MainActivity extends AppCompatActivity{
                     case IjkVideoView.STATE_BUFFERED:
                         break;
                     case IjkVideoView.STATE_PLAYBACK_COMPLETED:
+                        mPlayer_index3 ++;
+                        if(mPlayer_index3 >=mFileList_3.size())
+                            mPlayer_index3 = 0;
+                        mPlayer3.release();
+                        mPlayer3.setUrl(mFileList_3.get(mPlayer_index3));
+                        mPlayer3.start();
                         break;
                     case IjkVideoView.STATE_ERROR:
                         break;
@@ -391,7 +422,7 @@ public class MainActivity extends AppCompatActivity{
 
     public void startPlayingVideo4(){
         mPlayer4.setEnableAudioFocus(false);
-        mPlayer4.setUsingSurfaceView(true);
+        mPlayer4.setUsingSurfaceView(false);
         //        StandardVideoController controller2 = new StandardVideoController(this);
         //        mPlayer2.setVideoController(controller2);
 //        mPlayer4.setLooping(true);
@@ -426,6 +457,12 @@ public class MainActivity extends AppCompatActivity{
                     case IjkVideoView.STATE_BUFFERED:
                         break;
                     case IjkVideoView.STATE_PLAYBACK_COMPLETED:
+                        mPlayer_index4 ++;
+                        if(mPlayer_index4 >=mFileList_4.size())
+                            mPlayer_index4 = 0;
+                        mPlayer4.release();
+                        mPlayer4.setUrl(mFileList_4.get(mPlayer_index4));
+                        mPlayer4.start();
                         break;
                     case IjkVideoView.STATE_ERROR:
                         break;
@@ -439,7 +476,7 @@ public class MainActivity extends AppCompatActivity{
 
     public void startPlayingVideo5(){
         mPlayer5.setEnableAudioFocus(false);
-        mPlayer5.setUsingSurfaceView(true);
+        mPlayer5.setUsingSurfaceView(false);
         //        StandardVideoController controller2 = new StandardVideoController(this);
         //        mPlayer2.setVideoController(controller2);
 //        mPlayer5.setLooping(true);
@@ -478,6 +515,12 @@ public class MainActivity extends AppCompatActivity{
                     case IjkVideoView.STATE_BUFFERED:
                         break;
                     case IjkVideoView.STATE_PLAYBACK_COMPLETED:
+                        mPlayer_index5 ++;
+                        if(mPlayer_index5 >=mFileList_5.size())
+                            mPlayer_index5 = 0;
+                        mPlayer5.release();
+                        mPlayer5.setUrl(mFileList_5.get(mPlayer_index5));
+                        mPlayer5.start();
                         break;
                     case IjkVideoView.STATE_ERROR:
                         break;
