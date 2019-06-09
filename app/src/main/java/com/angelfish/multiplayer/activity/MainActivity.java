@@ -87,6 +87,7 @@ public class MainActivity extends AppCompatActivity{
     private int mPlayer_index4 = 0;
     private int mPlayer_index5 = 0;
     private boolean mTheFirstTimeRunning = true;
+
 //    private final String VOD_URL_1 = "android.resource://" + getPackageName() + "/" + R.raw.movie;
 //    private final String VOD_URL_2 = "android.resource://" + getPackageName() + "/" + R.raw.movie2;
 //    private final String VOD_URL_3 = "android.resource://" + getPackageName() + "/" + R.raw.movie3;
@@ -663,8 +664,9 @@ public class MainActivity extends AppCompatActivity{
         int versionCode = BuildConfig.VERSION_CODE;
         String versionName = BuildConfig.VERSION_NAME;
         String IPAddress = AddressUtils.getIPAddress(true);
+        String macAddress = AddressUtils.getMACAddress("wlan0");
         long timestamp = Calendar.getInstance().getTimeInMillis();
-        String ativate_string = "http://projector.auong.com/?act=api/device!activate&device_id="+android_id+"&version_code="+versionCode+"&version_name="+versionName+"&address="+IPAddress+"&timestamp="+timestamp;
+        String ativate_string = "http://projector.auong.com/?act=api/device!activate&mac_addr="+macAddress+"&device_id="+android_id+"&version_code="+versionCode+"&version_name="+versionName+"&address="+IPAddress+"&timestamp="+timestamp;
         Log.e(TAG, ativate_string);
         try{
             URL ativate_link = new URL(ativate_string);
@@ -772,12 +774,13 @@ public class MainActivity extends AppCompatActivity{
         }
 
         protected void onPostExecute(JSONObject response) {
+            int type = 0;
 //            showDialog("Downloaded " + result + " bytes");
             if(response != null)
             {
                 try {
                     String token = response.getString("token");
-                    String resource_string = "http://projector.auong.com/?act=api/resource&type=1&token="+token;
+                    String resource_string = "http://projector.auong.com/?act=api/resource&type="+type+"&token="+token;
                     try {
                         URL resource_link = new URL(resource_string);
                         new GetVideoJsonTask().execute(resource_link);
