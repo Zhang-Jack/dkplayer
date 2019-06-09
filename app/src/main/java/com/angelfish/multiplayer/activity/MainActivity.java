@@ -86,6 +86,7 @@ public class MainActivity extends AppCompatActivity{
     private int mPlayer_index3 = 0;
     private int mPlayer_index4 = 0;
     private int mPlayer_index5 = 0;
+    private boolean mTheFirstTimeRunning = true;
 //    private final String VOD_URL_1 = "android.resource://" + getPackageName() + "/" + R.raw.movie;
 //    private final String VOD_URL_2 = "android.resource://" + getPackageName() + "/" + R.raw.movie2;
 //    private final String VOD_URL_3 = "android.resource://" + getPackageName() + "/" + R.raw.movie3;
@@ -258,7 +259,7 @@ public class MainActivity extends AppCompatActivity{
 
     public void startPlayingVideo(){
         mPlayer1.setEnableAudioFocus(false);
-        mPlayer1.setUsingSurfaceView(false);
+        mPlayer1.setUsingSurfaceView(true);
 //        StandardVideoController controller1 = new StandardVideoController(this);
 //        mPlayer1.setVideoController(controller1);
         //高级设置（可选，须在start()之前调用方可生效）
@@ -285,7 +286,11 @@ public class MainActivity extends AppCompatActivity{
                     case IjkVideoView.STATE_PREPARED:
                         break;
                     case IjkVideoView.STATE_PLAYING:
-                        startPlayingVideo2();
+                        if(mTheFirstTimeRunning){
+                            startPlayingVideo2();
+                        }else{
+                            mPlayer1.setVisibility(View.VISIBLE);
+                        }
                         break;
                     case IjkVideoView.STATE_PAUSED:
                         break;
@@ -313,7 +318,7 @@ public class MainActivity extends AppCompatActivity{
     }
     public void startPlayingVideo2(){
         mPlayer2.setEnableAudioFocus(false);
-        mPlayer2.setUsingSurfaceView(false);
+        mPlayer2.setUsingSurfaceView(true);
         //        StandardVideoController controller2 = new StandardVideoController(this);
         //        mPlayer2.setVideoController(controller2);
 //        mPlayer2.setLooping(true);
@@ -339,7 +344,11 @@ public class MainActivity extends AppCompatActivity{
                     case IjkVideoView.STATE_PREPARED:
                         break;
                     case IjkVideoView.STATE_PLAYING:
-                        startPlayingVideo3();
+                        if(mTheFirstTimeRunning){
+                            startPlayingVideo3();
+                        }else{
+                            mPlayer2.setVisibility(View.VISIBLE);
+                        }
                         break;
                     case IjkVideoView.STATE_PAUSED:
                         break;
@@ -354,6 +363,7 @@ public class MainActivity extends AppCompatActivity{
                         mPlayer2.release();
                         mPlayer2.setUrl(mFileList_2.get(mPlayer_index2));
                         mPlayer2.start();
+                        mPlayer2.setVisibility(View.GONE);
 
                         break;
                     case IjkVideoView.STATE_ERROR:
@@ -368,7 +378,7 @@ public class MainActivity extends AppCompatActivity{
 
     public void startPlayingVideo3(){
         mPlayer3.setEnableAudioFocus(false);
-        mPlayer3.setUsingSurfaceView(false);
+        mPlayer3.setUsingSurfaceView(true);
         //        StandardVideoController controller2 = new StandardVideoController(this);
         //        mPlayer2.setVideoController(controller2);
 //        mPlayer3.setLooping(true);
@@ -394,7 +404,11 @@ public class MainActivity extends AppCompatActivity{
                     case IjkVideoView.STATE_PREPARED:
                         break;
                     case IjkVideoView.STATE_PLAYING:
-                        startPlayingVideo4();
+                        if(mTheFirstTimeRunning){
+                            startPlayingVideo4();
+                        }else{
+                            mPlayer3.setVisibility(View.VISIBLE);
+                        }
                         break;
                     case IjkVideoView.STATE_PAUSED:
                         break;
@@ -409,6 +423,7 @@ public class MainActivity extends AppCompatActivity{
                         mPlayer3.release();
                         mPlayer3.setUrl(mFileList_3.get(mPlayer_index3));
                         mPlayer3.start();
+                        mPlayer3.setVisibility(View.GONE);
                         break;
                     case IjkVideoView.STATE_ERROR:
                         break;
@@ -422,7 +437,7 @@ public class MainActivity extends AppCompatActivity{
 
     public void startPlayingVideo4(){
         mPlayer4.setEnableAudioFocus(false);
-        mPlayer4.setUsingSurfaceView(false);
+        mPlayer4.setUsingSurfaceView(true);
         //        StandardVideoController controller2 = new StandardVideoController(this);
         //        mPlayer2.setVideoController(controller2);
 //        mPlayer4.setLooping(true);
@@ -448,7 +463,11 @@ public class MainActivity extends AppCompatActivity{
                     case IjkVideoView.STATE_PREPARED:
                         break;
                     case IjkVideoView.STATE_PLAYING:
-                        startPlayingVideo5();
+                        if(mTheFirstTimeRunning){
+                            startPlayingVideo5();
+                        }else{
+                            mPlayer4.setVisibility(View.VISIBLE);
+                        }
                         break;
                     case IjkVideoView.STATE_PAUSED:
                         break;
@@ -463,6 +482,7 @@ public class MainActivity extends AppCompatActivity{
                         mPlayer4.release();
                         mPlayer4.setUrl(mFileList_4.get(mPlayer_index4));
                         mPlayer4.start();
+                        mPlayer4.setVisibility(View.GONE);
                         break;
                     case IjkVideoView.STATE_ERROR:
                         break;
@@ -476,7 +496,7 @@ public class MainActivity extends AppCompatActivity{
 
     public void startPlayingVideo5(){
         mPlayer5.setEnableAudioFocus(false);
-        mPlayer5.setUsingSurfaceView(false);
+        mPlayer5.setUsingSurfaceView(true);
         //        StandardVideoController controller2 = new StandardVideoController(this);
         //        mPlayer2.setVideoController(controller2);
 //        mPlayer5.setLooping(true);
@@ -502,11 +522,17 @@ public class MainActivity extends AppCompatActivity{
                     case IjkVideoView.STATE_PREPARED:
                         break;
                     case IjkVideoView.STATE_PLAYING:
-                        mPlayer1.setVisibility(View.VISIBLE);
-                        mPlayer2.setVisibility(View.VISIBLE);
-                        mPlayer3.setVisibility(View.VISIBLE);
-                        mPlayer4.setVisibility(View.VISIBLE);
-                        mPlayer5.setVisibility(View.VISIBLE);
+                        if(mTheFirstTimeRunning){
+                            mPlayer1.setVisibility(View.VISIBLE);
+                            mPlayer2.setVisibility(View.VISIBLE);
+                            mPlayer3.setVisibility(View.VISIBLE);
+                            mPlayer4.setVisibility(View.VISIBLE);
+                            mPlayer5.setVisibility(View.VISIBLE);
+                            mTheFirstTimeRunning = false;
+                        }else{
+                            mPlayer5.setVisibility(View.VISIBLE);
+                        }
+
                         break;
                     case IjkVideoView.STATE_PAUSED:
                         break;
@@ -521,6 +547,7 @@ public class MainActivity extends AppCompatActivity{
                         mPlayer5.release();
                         mPlayer5.setUrl(mFileList_5.get(mPlayer_index5));
                         mPlayer5.start();
+                        mPlayer5.setVisibility(View.GONE);
                         break;
                     case IjkVideoView.STATE_ERROR:
                         break;
