@@ -69,23 +69,24 @@ public class MainActivity extends AppCompatActivity{
     static final String TAG = "MultiPlayer";
 //    private static final String VOD_URL = "http://mov.bn.netease.com/open-movie/nos/flv/2017/01/03/SC8U8K7BC_hd.flv";
     private IjkVideoView mPlayer1;
+    /*
     private IjkVideoView mPlayer2;
     private IjkVideoView mPlayer3;
     private IjkVideoView mPlayer4;
-    private IjkVideoView mPlayer5;
+    private IjkVideoView mPlayer5;*/
     static private int backpressed = 0;
     private Context mContext;
     private boolean mIsPaused = false;
     private List<String> mFileList_1 = new ArrayList<>();
-    private List<String> mFileList_2 = new ArrayList<>();
+    /*private List<String> mFileList_2 = new ArrayList<>();
     private List<String> mFileList_3 = new ArrayList<>();
     private List<String> mFileList_4 = new ArrayList<>();
-    private List<String> mFileList_5 = new ArrayList<>();
+    private List<String> mFileList_5 = new ArrayList<>();*/
     private int mPlayer_index1 = 0;
-    private int mPlayer_index2 = 0;
+    /*private int mPlayer_index2 = 0;
     private int mPlayer_index3 = 0;
     private int mPlayer_index4 = 0;
-    private int mPlayer_index5 = 0;
+    private int mPlayer_index5 = 0;*/
     private boolean mTheFirstTimeRunning = true;
 
 //    private final String VOD_URL_1 = "android.resource://" + getPackageName() + "/" + R.raw.movie;
@@ -114,7 +115,7 @@ public class MainActivity extends AppCompatActivity{
         String VOD_URL_1 = "android.resource://" + getPackageName() + "/" + R.raw.movie;
         mPlayer1 = findViewById(R.id.player_1);
         mPlayer1.setUrl(VOD_URL_1);
-
+/*
         String VOD_URL_2 = "android.resource://" + getPackageName() + "/" + R.raw.movie2;
         mPlayer2 = findViewById(R.id.player_2);
         mPlayer2.setUrl(VOD_URL_2);
@@ -126,9 +127,9 @@ public class MainActivity extends AppCompatActivity{
         mPlayer4.setUrl(VOD_URL_4);
         String VOD_URL_5 = "android.resource://" + getPackageName() + "/" + R.raw.movie5;
         mPlayer5 = findViewById(R.id.player_5);
-        mPlayer5.setUrl(VOD_URL_5);
+        mPlayer5.setUrl(VOD_URL_5);*/
         mFileList_1.add(VOD_URL_1);
-        mFileList_1.add(VOD_URL_2);
+        /*mFileList_1.add(VOD_URL_2);
         mFileList_1.add(VOD_URL_3);
         mFileList_1.add(VOD_URL_4);
         mFileList_1.add(VOD_URL_5);
@@ -156,7 +157,7 @@ public class MainActivity extends AppCompatActivity{
         mFileList_5.add(VOD_URL_1);
         mFileList_5.add(VOD_URL_2);
         mFileList_5.add(VOD_URL_3);
-        mFileList_5.add(VOD_URL_4);
+        mFileList_5.add(VOD_URL_4);*/
 
         checkForUpdateResources();
         checkForUpdateAds();
@@ -174,12 +175,12 @@ public class MainActivity extends AppCompatActivity{
 //        }
         File f = new File(Environment.getExternalStorageDirectory() + "/MultiPlayer");
         AddressUtils.checkFilePath(f);
-        File dir1 = new File(f.getPath()+"/Player1/");
-        AddressUtils.checkFilePath(dir1);
-        File[] files = dir1.listFiles();
+//        File dir1 = new File(f.getPath()+"/Player1/");
+//        AddressUtils.checkFilePath(dir1);
+        File[] files = f.listFiles();
 
         for (int i = 0; i < files.length; i++){
-                mFileList_1.add(dir1.getAbsolutePath()+"/"+files[i].getName());
+                mFileList_1.add(f.getAbsolutePath()+"/"+files[i].getName());
 
         }
         if (mFileList_1.size()> 0)
@@ -287,11 +288,9 @@ public class MainActivity extends AppCompatActivity{
                     case IjkVideoView.STATE_PREPARED:
                         break;
                     case IjkVideoView.STATE_PLAYING:
-                        if(mTheFirstTimeRunning){
-                            startPlayingVideo2();
-                        }else{
+
                             mPlayer1.setVisibility(View.VISIBLE);
-                        }
+
                         break;
                     case IjkVideoView.STATE_PAUSED:
                         break;
@@ -317,6 +316,7 @@ public class MainActivity extends AppCompatActivity{
         mPlayer1.start();
         mPlayer1.setVisibility(View.GONE);
     }
+    /*
     public void startPlayingVideo2(){
         mPlayer2.setEnableAudioFocus(false);
         mPlayer2.setUsingSurfaceView(true);
@@ -559,15 +559,15 @@ public class MainActivity extends AppCompatActivity{
         mPlayer5.start();
         mPlayer5.setVisibility(View.GONE);
     }
-
+*/
     @Override
     protected void onPause() {
         super.onPause();
         mPlayer1.pause();
-        mPlayer2.pause();
+        /*mPlayer2.pause();
         mPlayer3.pause();
         mPlayer4.pause();
-        mPlayer5.pause();
+        mPlayer5.pause();*/
         mIsPaused = true;
     }
 
@@ -575,10 +575,10 @@ public class MainActivity extends AppCompatActivity{
     protected void onResume() {
         if(mIsPaused){
             mPlayer1.release();
-            mPlayer2.release();
+            /*mPlayer2.release();
             mPlayer3.release();
             mPlayer4.release();
-            mPlayer5.release();
+            mPlayer5.release();*/
             startPlayingVideo();
             mIsPaused = false;
         }
@@ -589,10 +589,10 @@ public class MainActivity extends AppCompatActivity{
     protected void onDestroy() {
         super.onDestroy();
         mPlayer1.release();
-        mPlayer2.release();
+        /*mPlayer2.release();
         mPlayer3.release();
         mPlayer4.release();
-        mPlayer5.release();
+        mPlayer5.release();*/
     }
 
 
@@ -613,7 +613,8 @@ public class MainActivity extends AppCompatActivity{
             return true;
         }else if (keyCode == KeyEvent.KEYCODE_MENU){
 //            Toast.makeText(mContext, "POPUP MENU", Toast.LENGTH_SHORT).show();
-            PopupMenu popup = new PopupMenu(MainActivity.this, mPlayer2);
+//            PopupMenu popup = new PopupMenu(MainActivity.this, mPlayer2);
+            PopupMenu popup = new PopupMenu(MainActivity.this, mPlayer1);
             //Inflating the Popup using xml file
             popup.getMenuInflater().inflate(R.menu.main_menu, popup.getMenu());
 
