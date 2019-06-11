@@ -3,6 +3,7 @@ package com.angelfish.multiplayer.activity;
 import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.icu.text.SimpleDateFormat;
@@ -89,7 +90,7 @@ public class MainActivity extends AppCompatActivity{
     private int mPlayer_index5 = 0;*/
     private boolean mTheFirstTimeRunning = true;
 
-//    private final String VOD_URL_1 = "android.resource://" + getPackageName() + "/" + R.raw.movie;
+    private String VOD_URL_1 = "";
 //    private final String VOD_URL_2 = "android.resource://" + getPackageName() + "/" + R.raw.movie2;
 //    private final String VOD_URL_3 = "android.resource://" + getPackageName() + "/" + R.raw.movie3;
 //    private final String VOD_URL_4 = "android.resource://" + getPackageName() + "/" + R.raw.movie4;
@@ -112,7 +113,7 @@ public class MainActivity extends AppCompatActivity{
             actionBar.setDisplayHomeAsUpEnabled(false);
             actionBar.hide();
         }
-        String VOD_URL_1 = "android.resource://" + getPackageName() + "/" + R.raw.movie;
+        VOD_URL_1 = "android.resource://" + getPackageName() + "/" + R.raw.movie;
         mPlayer1 = findViewById(R.id.player_1);
         mPlayer1.setUrl(VOD_URL_1);
 /*
@@ -694,10 +695,11 @@ public class MainActivity extends AppCompatActivity{
         return timestamp;
     }
 
-    private class DownloadFilesTask extends AsyncTask<URL, Integer, Long> {
-        protected Long doInBackground(URL... urls) {
+    private class DownloadFilesTask extends AsyncTask<URL, Integer, String> {
+        protected String doInBackground(URL... urls) {
             int count = urls.length;
             long totalSize = 0;
+            String fileName = "";
             try{
                 for (int i = 0; i < count; i++) {
                     URLConnection conexion = urls[i].openConnection();
@@ -706,9 +708,10 @@ public class MainActivity extends AppCompatActivity{
                     int lenghtOfFile = conexion.getContentLength();
                     Log.d(TAG, "Lenght of file: " + lenghtOfFile);
                     totalSize += lenghtOfFile;
+                    fileName = urls[i].toString().substring(urls[i].toString().lastIndexOf("/") + 1);
 
                     InputStream input = new BufferedInputStream(conexion.getInputStream());
-                    OutputStream output = new FileOutputStream("/sdcard/temp.mp4");
+                    OutputStream output = new FileOutputStream(Environment.getExternalStorageDirectory() + "/MultiPlayer/"+fileName);
                     Log.d(TAG, "save to temp ");
                     byte data[] = new byte[1024];
 
@@ -716,7 +719,7 @@ public class MainActivity extends AppCompatActivity{
 
                     while ((count = input.read(data)) != -1) {
                         total += count;
-                        Log.d(TAG, "downlaod bytes: " + total);
+//                        Log.d(TAG, "downlaod bytes: " + total);
                         publishProgress((int)((total*100)/lenghtOfFile));
                         output.write(data, 0, count);
                     }
@@ -728,22 +731,29 @@ public class MainActivity extends AppCompatActivity{
             }catch(Exception e){
                 return null;
             }
-            return totalSize;
+            return fileName;
         }
 
         protected void onProgressUpdate(Integer... progress) {
 //            setProgressPercent(progress[0]);
         }
 
-        protected void onPostExecute(Long result) {
+        protected void onPostExecute(String fileName) {
 //            showDialog("Downloaded " + result + " bytes");
+            if(fileName == null){
+                Toast.makeText(mContext, "Download error", Toast.LENGTH_LONG).show();
+            }
             Toast.makeText(mContext,"Download finished!", Toast.LENGTH_LONG).show();
-            mPlayer1.release();
+            mFileList_1.add(Environment.getExternalStorageDirectory() + "/MultiPlayer/"+fileName);
             //重新设置数据
-            mPlayer1.setUrl("/sdcard/temp.mp4");
+            if(mFileList_1.contains(VOD_URL_1)){
+                mFileList_1.remove(VOD_URL_1);
+            }
+            mPlayer1.release();
 
 //            mPlayer1.setVideoController(mStandardVideoController);
             //开始播放
+            mPlayer1.setUrl(mFileList_1.get(mFileList_1.size()-1));
             mPlayer1.start();
         }
     }
@@ -845,6 +855,17 @@ public class MainActivity extends AppCompatActivity{
                         Log.i(TAG, "id ="+id);
                         Log.i(TAG, "name ="+name);
                         Log.i(TAG, "url ="+remote_url);
+                        String fileName = remote_url.substring(remote_url.lastIndexOf("/") + 1);
+                        File file_to_check = new File(Environment.getExternalStorageDirectory() + "/MultiPlayer/"+fileName);
+                        if(!file_to_check.exists()){
+                            try {
+                                URL downlaod_url = new URL(remote_url);
+                                new DownloadFilesTask().execute(downlaod_url);
+                            }catch(MalformedURLException ex){
+                                Log.e(TAG,"URL parsing error");
+                                ex.printStackTrace();
+                            }
+                        }
                     }
                     Log.e(TAG, "Success: " + video_info );
 
