@@ -666,6 +666,9 @@ public class MainActivity extends AppCompatActivity{
         String versionName = BuildConfig.VERSION_NAME;
         String IPAddress = AddressUtils.getIPAddress(true);
         String macAddress = AddressUtils.getMACAddress("wlan0");
+        if(macAddress.equals("")){
+            macAddress = AddressUtils.getMACAddress("eth0");
+        }
         long timestamp = Calendar.getInstance().getTimeInMillis();
         String ativate_string = "http://projector.auong.com/?act=api/device!activate&mac_addr="+macAddress+"&device_id="+android_id+"&version_code="+versionCode+"&version_name="+versionName+"&address="+IPAddress+"&timestamp="+timestamp;
         Log.e(TAG, ativate_string);
