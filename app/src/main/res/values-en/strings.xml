@@ -38,4 +38,6 @@
     <string name="str_update_ads">Update Advertisements</string>
     <string name="str_change_layout">Change Layout</string>
     <string name="str_version_info">Version Info</string>
+    <string name="str_start_checking">Start checking updates...</string>
+    <string name="str_start_downloading">Start downloading...</string>
 </resources>

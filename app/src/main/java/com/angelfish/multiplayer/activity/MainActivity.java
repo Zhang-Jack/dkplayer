@@ -13,6 +13,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.PowerManager;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresPermission;
 import android.support.v4.app.ActivityCompat;
@@ -79,6 +80,7 @@ public class MainActivity extends AppCompatActivity{
     private Context mContext;
     private boolean mIsPaused = false;
     private List<String> mFileList_1 = new ArrayList<>();
+    protected PowerManager.WakeLock mWakeLock;
     /*private List<String> mFileList_2 = new ArrayList<>();
     private List<String> mFileList_3 = new ArrayList<>();
     private List<String> mFileList_4 = new ArrayList<>();
@@ -107,6 +109,8 @@ public class MainActivity extends AppCompatActivity{
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
         setContentView(R.layout.activity_main);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setTitle(R.string.str_multi_player);
@@ -174,11 +178,16 @@ public class MainActivity extends AppCompatActivity{
 //            mFileList_1.add(assets.getAbsolutePath()+"/"+default_movies[i].getName());
 //
 //        }
+        Toast.makeText(mContext, R.string.str_start_checking, Toast.LENGTH_SHORT).show();
         File f = new File(Environment.getExternalStorageDirectory() + "/MultiPlayer");
         AddressUtils.checkFilePath(f);
 //        File dir1 = new File(f.getPath()+"/Player1/");
 //        AddressUtils.checkFilePath(dir1);
         File[] files = f.listFiles();
+        if (files.length > 0){
+            mFileList_1.remove(VOD_URL_1);
+        }
+
 
         for (int i = 0; i < files.length; i++){
                 mFileList_1.add(f.getAbsolutePath()+"/"+files[i].getName());
@@ -186,10 +195,10 @@ public class MainActivity extends AppCompatActivity{
         }
         if (mFileList_1.size()> 0)
         {
-//                mPlayer1.setUrl(mFileList_1.get(0));
+                mPlayer1.setUrl(mFileList_1.get(0));
                 Log.i(TAG, "setting video url to sdcard resources!");
         }else{
-                Toast.makeText(mContext, "No file found in the dir!!", Toast.LENGTH_LONG).show();
+//                Toast.makeText(mContext, "No file found in the dir!!", Toast.LENGTH_LONG).show();
         }
 
     }
@@ -648,7 +657,7 @@ public class MainActivity extends AppCompatActivity{
 //                        alert.setTitle(R.string.str_version_info);
 //                        alert.show();
                     }
-                    Toast.makeText(MainActivity.this,"You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(MainActivity.this,"You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
                     return true;
                 }
             });
@@ -743,7 +752,7 @@ public class MainActivity extends AppCompatActivity{
             if(fileName == null){
                 Toast.makeText(mContext, "Download error", Toast.LENGTH_LONG).show();
             }
-            Toast.makeText(mContext,"Download finished!", Toast.LENGTH_LONG).show();
+//            Toast.makeText(mContext,"Download finished!", Toast.LENGTH_LONG).show();
             mFileList_1.add(Environment.getExternalStorageDirectory() + "/MultiPlayer/"+fileName);
             //重新设置数据
             if(mFileList_1.contains(VOD_URL_1)){
@@ -858,6 +867,9 @@ public class MainActivity extends AppCompatActivity{
                         String fileName = remote_url.substring(remote_url.lastIndexOf("/") + 1);
                         File file_to_check = new File(Environment.getExternalStorageDirectory() + "/MultiPlayer/"+fileName);
                         if(!file_to_check.exists()){
+                            if(i==0){
+                                Toast.makeText(mContext, R.string.str_start_downloading, Toast.LENGTH_SHORT).show();
+                            }
                             try {
                                 URL downlaod_url = new URL(remote_url);
                                 new DownloadFilesTask().execute(downlaod_url);

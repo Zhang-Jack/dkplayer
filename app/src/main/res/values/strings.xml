@@ -46,4 +46,6 @@
     <string name="str_update_ads">更新广告</string>
     <string name="str_change_layout">变更布局</string>
     <string name="str_version_info">版本信息</string>
+    <string name="str_start_checking">开始检查更新...</string>
+    <string name="str_start_downloading">已连接服务器，开始下载...</string>
 </resources>
