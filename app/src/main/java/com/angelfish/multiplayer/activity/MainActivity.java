@@ -91,12 +91,15 @@ public class MainActivity extends AppCompatActivity{
     private int mPlayer_index4 = 0;
     private int mPlayer_index5 = 0;*/
     private boolean mTheFirstTimeRunning = true;
+    
 
     private String VOD_URL_1 = "";
 //    private final String VOD_URL_2 = "android.resource://" + getPackageName() + "/" + R.raw.movie2;
 //    private final String VOD_URL_3 = "android.resource://" + getPackageName() + "/" + R.raw.movie3;
 //    private final String VOD_URL_4 = "android.resource://" + getPackageName() + "/" + R.raw.movie4;
 //    private final String VOD_URL_5 = "android.resource://" + getPackageName() + "/" + R.raw.movie5;
+
+    private static final int UPDATE_INTEVAL = 60000;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -168,6 +171,20 @@ public class MainActivity extends AppCompatActivity{
         checkForUpdateAds();
 
         startPlayingVideo();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(UPDATE_INTEVAL); // 休眠60秒
+                    checkForUpdateAds();
+
+                }catch(InterruptedException ex){
+                    ex.printStackTrace();
+
+                }
+            }
+        }).start();
+
 
     }
 
