@@ -40,4 +40,7 @@
     <string name="str_version_info">Version Info</string>
     <string name="str_start_checking">Start checking updates...</string>
     <string name="str_start_downloading">Start downloading...</string>
+    <string name="str_updated_and_no_download">List updated and no download needed!</string>
+    <string name="str_connection_error">Connection error, please check your network!</string>
+    <string name="str_connecting_server">Connecting server...</string>
 </resources>

@@ -91,6 +91,7 @@ public class MainActivity extends AppCompatActivity{
     private int mPlayer_index4 = 0;
     private int mPlayer_index5 = 0;*/
     private boolean mTheFirstTimeRunning = true;
+    private int mDownloadFilesCount = 0;
     
 
     private String VOD_URL_1 = "";
@@ -175,9 +176,12 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void run() {
                 try {
-                    Thread.sleep(UPDATE_INTEVAL); // 休眠60秒
-                    checkForUpdateAds();
-
+                    for(;;) {
+                        Thread.sleep(UPDATE_INTEVAL); // 休眠60秒
+                        if (mDownloadFilesCount == 0) {
+                            checkForUpdateAds();
+                        }
+                    }
                 }catch(InterruptedException ex){
                     ex.printStackTrace();
 
@@ -755,6 +759,11 @@ public class MainActivity extends AppCompatActivity{
                     input.close();
                 }
             }catch(Exception e){
+                if(!fileName.equals("")){
+                    File f = new File(Environment.getExternalStorageDirectory() + "/MultiPlayer/"+fileName);
+                    f.delete();
+                }
+                mDownloadFilesCount--;
                 return null;
             }
             return fileName;
@@ -770,6 +779,9 @@ public class MainActivity extends AppCompatActivity{
                 Toast.makeText(mContext, "Download error", Toast.LENGTH_LONG).show();
             }
 //            Toast.makeText(mContext,"Download finished!", Toast.LENGTH_LONG).show();
+            if(mDownloadFilesCount >0){
+                mDownloadFilesCount--;
+            }
             mFileList_1.add(Environment.getExternalStorageDirectory() + "/MultiPlayer/"+fileName);
             //重新设置数据
             if(mFileList_1.contains(VOD_URL_1)){
@@ -803,6 +815,7 @@ public class MainActivity extends AppCompatActivity{
                     return new JSONObject(stringBuffer.toString());
                 }
             }catch(Exception ex){
+                Toast.makeText(mContext, R.string.str_connection_error, Toast.LENGTH_LONG).show();
                 ex.printStackTrace();
                 return null;
             }
@@ -870,6 +883,7 @@ public class MainActivity extends AppCompatActivity{
 //            showDialog("Downloaded " + result + " bytes");
             if(response != null)
             {
+                mDownloadFilesCount = 0;
                 try {
                     String video_info_str = response.getString("data");
                     JSONArray video_info = new JSONArray(video_info_str);
@@ -887,6 +901,7 @@ public class MainActivity extends AppCompatActivity{
                             if(i==0){
                                 Toast.makeText(mContext, R.string.str_start_downloading, Toast.LENGTH_SHORT).show();
                             }
+                            mDownloadFilesCount++;
                             try {
                                 URL downlaod_url = new URL(remote_url);
                                 new DownloadFilesTask().execute(downlaod_url);
@@ -897,6 +912,9 @@ public class MainActivity extends AppCompatActivity{
                         }
                     }
                     Log.e(TAG, "Success: " + video_info );
+                    if(mDownloadFilesCount == 0){
+                             Toast.makeText(mContext, R.string.str_updated_and_no_download, Toast.LENGTH_SHORT).show();
+                                         }
 
                 } catch (JSONException ex) {
                     Log.e(TAG, "Failure", ex);

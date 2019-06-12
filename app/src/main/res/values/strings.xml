@@ -48,4 +48,7 @@
     <string name="str_version_info">版本信息</string>
     <string name="str_start_checking">开始检查更新...</string>
     <string name="str_start_downloading">已连接服务器，开始下载...</string>
+    <string name="str_updated_and_no_download">广告列表已为最新，无需下载</string>
+    <string name="str_connection_error">连接服务器失败，请检查网络连接状态!</string>
+    <string name="str_connecting_server">正在连接服务器...</string>
 </resources>
