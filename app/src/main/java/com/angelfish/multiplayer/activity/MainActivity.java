@@ -68,7 +68,7 @@ import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity{
 
-    static final String TAG = "MultiPlayer";
+    private static final String TAG = "MultiPlayer";
 //    private static final String VOD_URL = "http://mov.bn.netease.com/open-movie/nos/flv/2017/01/03/SC8U8K7BC_hd.flv";
     private IjkVideoView mPlayer1;
     /*
