@@ -292,7 +292,7 @@ public class MainActivity extends AppCompatActivity{
 
     public void startPlayingVideo(){
         mPlayer1.setEnableAudioFocus(false);
-        mPlayer1.setUsingSurfaceView(true);
+        mPlayer1.setUsingSurfaceView(false);
 //        StandardVideoController controller1 = new StandardVideoController(this);
 //        mPlayer1.setVideoController(controller1);
         //高级设置（可选，须在start()之前调用方可生效）
@@ -815,7 +815,7 @@ public class MainActivity extends AppCompatActivity{
                     return new JSONObject(stringBuffer.toString());
                 }
             }catch(Exception ex){
-                Toast.makeText(mContext, R.string.str_connection_error, Toast.LENGTH_LONG).show();
+//                Toast.makeText(mContext, R.string.str_connection_error, Toast.LENGTH_LONG).show();
                 ex.printStackTrace();
                 return null;
             }
