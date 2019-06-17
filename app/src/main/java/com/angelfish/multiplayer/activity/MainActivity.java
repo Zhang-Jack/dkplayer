@@ -693,6 +693,10 @@ public class MainActivity extends AppCompatActivity{
     public void checkForUpdateAds(){
         String android_id = Secure.getString(mContext.getContentResolver(),
                 Secure.ANDROID_ID);
+        Log.i(TAG, "length of device id ="+android_id);
+        if(android_id.length()==15){
+            android_id = android_id+"0";
+        }
         int versionCode = BuildConfig.VERSION_CODE;
         String versionName = BuildConfig.VERSION_NAME;
         String IPAddress = AddressUtils.getIPAddress(true);

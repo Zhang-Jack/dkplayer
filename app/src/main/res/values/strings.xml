@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">投影播放器</string>
+    <string name="str_settings">播放器设置</string>
     <string name="float_window_warning">当前无权限使用悬浮窗，请授权！</string>
     <string name="error_message">出了点小问题，稍后重试</string>
     <string name="retry">重    试</string>
@@ -51,4 +52,8 @@
     <string name="str_updated_and_no_download">广告列表已为最新，无需下载</string>
     <string name="str_connection_error">连接服务器失败，请检查网络连接状态!</string>
     <string name="str_connecting_server">正在连接服务器...</string>
+    <string name="str_network_mode">组网方式：</string>
+    <string name="str_radio_www">广域网</string>
+    <string name="str_radio_lan">局域网</string>
+    <string name="str_server_address">修改服务器网址：</string>
 </resources>

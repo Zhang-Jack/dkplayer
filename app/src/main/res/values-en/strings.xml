@@ -2,6 +2,7 @@
 <resources>
     <string name="app_name">MultiPlayer</string>
     <string name="str_api">API</string>
+    <string name="str_settings">Settings</string>
     <string name="str_list">LIST</string>
     <string name="str_extend">EXTEND</string>
     <string name="str_pip">PiP</string>
@@ -43,4 +44,8 @@
     <string name="str_updated_and_no_download">List updated and no download needed!</string>
     <string name="str_connection_error">Connection error, please check your network!</string>
     <string name="str_connecting_server">Connecting server...</string>
+    <string name="str_network_mode">Network Mode</string>
+    <string name="str_radio_www">World Wide Web</string>
+    <string name="str_radio_lan">LAN</string>
+    <string name="str_server_address">Change server address：</string>
 </resources>

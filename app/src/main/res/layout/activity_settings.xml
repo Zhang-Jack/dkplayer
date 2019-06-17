@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="3"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/textSetting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/str_network_mode"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:visibility="visible"
+        />
+
+        <RadioGroup
+            android:id="@+id/radioNetwork"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textSetting"
+
+            >
+
+            <RadioButton
+                android:id="@+id/radioWWW"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/str_radio_www"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:checked="true" />
+
+            <RadioButton
+                android:id="@+id/radioLAN"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/radioWWW"
+                android:layout_toEndOf="@id/radioWWW"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:text="@string/str_radio_lan" />
+
+        </RadioGroup>
+    <TextView
+        android:id="@+id/textSetting2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/str_server_address"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:visibility="visible"
+        android:layout_below="@id/radioNetwork"/>
+    <TextView
+        android:id="@+id/textInput"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:inputType="textWebEditText"
+        android:hint="http://projector.auong.com/"
+        android:layout_below="@id/textSetting2"
+
+        ></TextView>
+
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Reset"
+        android:background="#FFFFFF"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Apply and Save"
+        android:textColor="#FFFFFF"
+        android:background="#0000FF"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"/>
+
+</RelativeLayout>
