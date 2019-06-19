@@ -56,4 +56,11 @@
     <string name="str_radio_www">广域网</string>
     <string name="str_radio_lan">局域网</string>
     <string name="str_server_address">修改服务器网址：</string>
+    <string name="str_default_website">http://projector.auong.com/, http://192.168.1.1/, etc</string>
+    <string name="str_please_input">请按提示格式输入新的网址</string>
+    <string name="str_start_with_http">请以 http:// 开头输入新的网址</string>
+    <string name="str_setting_succeed">设置成功</string>
+    <string name="str_please_launch_main">请退出本设置程序，并启动投影播放器主程序</string>
+    <string name="str_reset">重置</string>
+    <string name="str_apply">设定</string>
 </resources>

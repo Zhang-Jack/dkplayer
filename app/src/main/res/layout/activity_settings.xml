@@ -5,7 +5,7 @@
     android:weightSum="3"
     android:orientation="vertical">
 
-    <TextView
+    <!--TextView
         android:id="@+id/textSetting"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -39,7 +39,7 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:text="@string/str_radio_lan" />
 
-        </RadioGroup>
+        </RadioGroup-->
     <TextView
         android:id="@+id/textSetting2"
         android:layout_width="wrap_content"
@@ -47,33 +47,41 @@
         android:text="@string/str_server_address"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:visibility="visible"
-        android:layout_below="@id/radioNetwork"/>
-    <TextView
+        android:layout_centerHorizontal="true"
+        />
+    <EditText
         android:id="@+id/textInput"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:inputType="textWebEditText"
-        android:hint="http://projector.auong.com/"
+        android:hint="@string/str_default_website"
         android:layout_below="@id/textSetting2"
-
-        ></TextView>
+        android:layout_centerHorizontal="true"
+        ></EditText>
 
 
     <Button
+        android:id="@+id/btn_reset"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Reset"
+        android:text="@string/str_reset"
         android:background="#FFFFFF"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"/>
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="50dp"
+        android:layout_marginBottom="50dp"/>
+
 
     <Button
+        android:id="@+id/btn_apply"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Apply and Save"
+        android:text="@string/str_apply"
         android:textColor="#FFFFFF"
         android:background="#0000FF"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"/>
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="50dp"
+        android:layout_marginBottom="50dp"/>
 
 </RelativeLayout>

@@ -48,4 +48,11 @@
     <string name="str_radio_www">World Wide Web</string>
     <string name="str_radio_lan">LAN</string>
     <string name="str_server_address">Change server address：</string>
+    <string name="str_default_website">http://projector.auong.com/, http://192.168.1.1/, etc</string>
+    <string name="str_please_input">Please input a new address!</string>
+    <string name="str_start_with_http">Please input a new address start with http://</string>
+    <string name="str_setting_succeed">Setting Succeed</string>
+    <string name="str_please_launch_main">Please exit this activity, and launch MultiPlayer</string>
+    <string name="str_reset">Reset</string>
+    <string name="str_apply">Apply</string>
 </resources>

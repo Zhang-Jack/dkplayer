@@ -8,6 +8,7 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.icu.text.SimpleDateFormat;
 
+import android.location.Address;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -101,6 +102,10 @@ public class MainActivity extends AppCompatActivity{
 //    private final String VOD_URL_5 = "android.resource://" + getPackageName() + "/" + R.raw.movie5;
 
     private static final int UPDATE_INTEVAL = 60000;
+    private String BASE_URL = "http://projector.auong.com/";
+    private static final String SettingsPref = "settings_pref";
+    private static final String AddressKey = "AddressKey";
+    private SharedPreferences mSettingsSP;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -121,6 +126,12 @@ public class MainActivity extends AppCompatActivity{
             actionBar.setDisplayHomeAsUpEnabled(false);
             actionBar.hide();
         }
+        mSettingsSP = getSharedPreferences(SettingsPref, MODE_PRIVATE);
+        String readPref = mSettingsSP.getString(AddressKey, "");
+        if(!readPref.equals("")){
+            BASE_URL = readPref;
+        }
+
         VOD_URL_1 = "android.resource://" + getPackageName() + "/" + R.raw.movie;
         mPlayer1 = findViewById(R.id.player_1);
         mPlayer1.setUrl(VOD_URL_1);
@@ -705,7 +716,7 @@ public class MainActivity extends AppCompatActivity{
             macAddress = AddressUtils.getMACAddress("eth0");
         }
         long timestamp = Calendar.getInstance().getTimeInMillis();
-        String ativate_string = "http://projector.auong.com/?act=api/device!activate&mac_addr="+macAddress+"&device_id="+android_id+"&version_code="+versionCode+"&version_name="+versionName+"&address="+IPAddress+"&timestamp="+timestamp;
+        String ativate_string = BASE_URL+"/?act=api/device!activate&mac_addr="+macAddress+"&device_id="+android_id+"&version_code="+versionCode+"&version_name="+versionName+"&address="+IPAddress+"&timestamp="+timestamp;
         Log.e(TAG, ativate_string);
         try{
             URL ativate_link = new URL(ativate_string);
@@ -837,7 +848,7 @@ public class MainActivity extends AppCompatActivity{
             {
                 try {
                     String token = response.getString("token");
-                    String resource_string = "http://projector.auong.com/?act=api/resource&type="+type+"&token="+token;
+                    String resource_string = BASE_URL+"/?act=api/resource&type="+type+"&token="+token;
                     try {
                         URL resource_link = new URL(resource_string);
                         new GetVideoJsonTask().execute(resource_link);
