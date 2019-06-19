@@ -45,9 +45,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/str_server_address"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
         android:visibility="visible"
         android:layout_centerHorizontal="true"
+        android:textSize="50dp"
         />
     <EditText
         android:id="@+id/textInput"
@@ -57,6 +58,7 @@
         android:hint="@string/str_default_website"
         android:layout_below="@id/textSetting2"
         android:layout_centerHorizontal="true"
+        android:textSize="50dp"
         ></EditText>
 
 
@@ -68,6 +70,7 @@
         android:background="#FFFFFF"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
+        android:textSize="50dp"
         android:layout_marginLeft="50dp"
         android:layout_marginBottom="50dp"/>
 
@@ -81,6 +84,7 @@
         android:background="#0000FF"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
+        android:textSize="50dp"
         android:layout_marginRight="50dp"
         android:layout_marginBottom="50dp"/>
 

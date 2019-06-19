@@ -81,6 +81,7 @@ public class MainActivity extends AppCompatActivity{
     private Context mContext;
     private boolean mIsPaused = false;
     private List<String> mFileList_1 = new ArrayList<>();
+    private List<String> mParserFromJson = new ArrayList<>();
     protected PowerManager.WakeLock mWakeLock;
     /*private List<String> mFileList_2 = new ArrayList<>();
     private List<String> mFileList_3 = new ArrayList<>();
@@ -912,6 +913,7 @@ public class MainActivity extends AppCompatActivity{
                         Log.i(TAG, "url ="+remote_url);
                         String fileName = remote_url.substring(remote_url.lastIndexOf("/") + 1);
                         File file_to_check = new File(Environment.getExternalStorageDirectory() + "/MultiPlayer/"+fileName);
+                        mParserFromJson.add(Environment.getExternalStorageDirectory() + "/MultiPlayer/"+fileName);
                         if(!file_to_check.exists()){
                             if(i==0){
                                 Toast.makeText(mContext, R.string.str_start_downloading, Toast.LENGTH_SHORT).show();
@@ -926,6 +928,7 @@ public class MainActivity extends AppCompatActivity{
                             }
                         }
                     }
+                    checkDeleteFiles();
                     Log.e(TAG, "Success: " + video_info );
                     if(mDownloadFilesCount == 0){
                              Toast.makeText(mContext, R.string.str_updated_and_no_download, Toast.LENGTH_SHORT).show();
@@ -937,5 +940,21 @@ public class MainActivity extends AppCompatActivity{
             }
         }
 
+    }
+
+    public void checkDeleteFiles(){
+        List<String> indexToDelete;
+        if(mFileList_1.size() > 0){
+            for (int i =0; i< mFileList_1.size(); i++){
+                String filePathToCheck = mFileList_1.get(i).toString();
+                Log.i(TAG,"filePathToCheck ="+filePathToCheck);
+                if(!mParserFromJson.contains(mFileList_1.get(i)) && filePathToCheck.startsWith("/storage/emulated/0/MultiPlayer/") ){
+//                    Toast.makeText(mContext, "Json from website does not contains"+filePathToCheck, Toast.LENGTH_LONG).show();
+                    mFileList_1.remove(i);
+                    File fileToDelete = new File(mFileList_1.get(i));
+                    fileToDelete.delete();
+                }
+            }
+        }
     }
 }
