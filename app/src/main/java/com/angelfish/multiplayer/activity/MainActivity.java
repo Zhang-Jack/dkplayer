@@ -219,6 +219,7 @@ public class MainActivity extends AppCompatActivity{
         File[] files = f.listFiles();
         if (files.length > 0){
             mFileList_1.remove(VOD_URL_1);
+            mFileList_1 = new ArrayList<>();
         }
 
 
@@ -943,17 +944,21 @@ public class MainActivity extends AppCompatActivity{
     }
 
     public void checkDeleteFiles(){
-        List<String> indexToDelete;
+        int filesNumberDeleted = 0;
         if(mFileList_1.size() > 0){
             for (int i =0; i< mFileList_1.size(); i++){
                 String filePathToCheck = mFileList_1.get(i).toString();
                 Log.i(TAG,"filePathToCheck ="+filePathToCheck);
                 if(!mParserFromJson.contains(mFileList_1.get(i)) && filePathToCheck.startsWith("/storage/emulated/0/MultiPlayer/") ){
 //                    Toast.makeText(mContext, "Json from website does not contains"+filePathToCheck, Toast.LENGTH_LONG).show();
-                    mFileList_1.remove(i);
+//                    mFileList_1.remove(i);
                     File fileToDelete = new File(mFileList_1.get(i));
                     fileToDelete.delete();
+                    filesNumberDeleted ++;
                 }
+            }
+            if(filesNumberDeleted > 0) {
+                checkForUpdateResources();
             }
         }
     }
