@@ -55,4 +55,5 @@
     <string name="str_please_launch_main">Please exit this activity, and launch MultiPlayer</string>
     <string name="str_reset">Reset</string>
     <string name="str_apply">Apply</string>
+    <string name="str_downloaded"> downloaded</string>
 </resources>

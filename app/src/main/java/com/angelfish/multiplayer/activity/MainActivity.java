@@ -217,9 +217,14 @@ public class MainActivity extends AppCompatActivity{
 //        File dir1 = new File(f.getPath()+"/Player1/");
 //        AddressUtils.checkFilePath(dir1);
         File[] files = f.listFiles();
-        if (files.length > 0){
-            mFileList_1.remove(VOD_URL_1);
-            mFileList_1 = new ArrayList<>();
+        if (files.length > 0 ){
+            if(mFileList_1.contains(VOD_URL_1)){
+                mFileList_1.remove(VOD_URL_1);
+            }
+            else if(mDownloadFilesCount == 0){
+                Log.i(TAG, "Update Play list when no downloading");
+                mFileList_1 = new ArrayList<>();
+            }
         }
 
 
@@ -227,13 +232,13 @@ public class MainActivity extends AppCompatActivity{
                 mFileList_1.add(f.getAbsolutePath()+"/"+files[i].getName());
 
         }
-        if (mFileList_1.size()> 0)
+        if (mFileList_1.size() == 0)
         {
-                mPlayer1.setUrl(mFileList_1.get(0));
-                Log.i(TAG, "setting video url to sdcard resources!");
-        }else{
+            Log.i(TAG, "No file found in the dir!");
+            mFileList_1.add(VOD_URL_1);
 //                Toast.makeText(mContext, "No file found in the dir!!", Toast.LENGTH_LONG).show();
         }
+        mPlayer1.setUrl(mFileList_1.get(0));
 
     }
 
@@ -799,6 +804,7 @@ public class MainActivity extends AppCompatActivity{
             if(mDownloadFilesCount >0){
                 mDownloadFilesCount--;
             }
+            Toast.makeText(mContext, fileName+getString(R.string.str_downloaded), Toast.LENGTH_LONG).show();
             mFileList_1.add(Environment.getExternalStorageDirectory() + "/MultiPlayer/"+fileName);
             //重新设置数据
             if(mFileList_1.contains(VOD_URL_1)){
@@ -929,11 +935,11 @@ public class MainActivity extends AppCompatActivity{
                             }
                         }
                     }
-                    checkDeleteFiles();
                     Log.e(TAG, "Success: " + video_info );
                     if(mDownloadFilesCount == 0){
                              Toast.makeText(mContext, R.string.str_updated_and_no_download, Toast.LENGTH_SHORT).show();
-                                         }
+                             checkDeleteFiles();
+                    }
 
                 } catch (JSONException ex) {
                     Log.e(TAG, "Failure", ex);
