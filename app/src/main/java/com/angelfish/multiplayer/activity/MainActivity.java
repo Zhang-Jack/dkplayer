@@ -22,6 +22,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -70,43 +71,33 @@ import org.json.JSONObject;
 public class MainActivity extends AppCompatActivity{
 
     private static final String TAG = "MultiPlayer";
-//    private static final String VOD_URL = "http://mov.bn.netease.com/open-movie/nos/flv/2017/01/03/SC8U8K7BC_hd.flv";
     private IjkVideoView mPlayer1;
-    /*
-    private IjkVideoView mPlayer2;
-    private IjkVideoView mPlayer3;
-    private IjkVideoView mPlayer4;
-    private IjkVideoView mPlayer5;*/
+
     static private int backpressed = 0;
     private Context mContext;
     private boolean mIsPaused = false;
     private List<String> mFileList_1 = new ArrayList<>();
     private List<String> mParserFromJson = new ArrayList<>();
     protected PowerManager.WakeLock mWakeLock;
-    /*private List<String> mFileList_2 = new ArrayList<>();
-    private List<String> mFileList_3 = new ArrayList<>();
-    private List<String> mFileList_4 = new ArrayList<>();
-    private List<String> mFileList_5 = new ArrayList<>();*/
+
     private int mPlayer_index1 = 0;
-    /*private int mPlayer_index2 = 0;
-    private int mPlayer_index3 = 0;
-    private int mPlayer_index4 = 0;
-    private int mPlayer_index5 = 0;*/
+
     private boolean mTheFirstTimeRunning = true;
     private int mDownloadFilesCount = 0;
     
 
     private String VOD_URL_1 = "";
-//    private final String VOD_URL_2 = "android.resource://" + getPackageName() + "/" + R.raw.movie2;
-//    private final String VOD_URL_3 = "android.resource://" + getPackageName() + "/" + R.raw.movie3;
-//    private final String VOD_URL_4 = "android.resource://" + getPackageName() + "/" + R.raw.movie4;
-//    private final String VOD_URL_5 = "android.resource://" + getPackageName() + "/" + R.raw.movie5;
+
 
     private static final int UPDATE_INTEVAL = 60000;
     private String BASE_URL = "http://projector.auong.com/";
     private static final String SettingsPref = "settings_pref";
     private static final String AddressKey = "AddressKey";
+    private static final String ModeKey = "ModeKey";
     private SharedPreferences mSettingsSP;
+    private TelephonyManager mTelephonyManager ;
+    private String mESN_Number = "";
+    private String mPlayMode = "All";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -114,6 +105,7 @@ public class MainActivity extends AppCompatActivity{
         mContext = this.getApplicationContext();
         isWriteStoragePermissionGranted();
         isReadStoragePermissionGranted();
+//        isReadPhoneStateGranted();
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         requestWindowFeature(Window.FEATURE_NO_TITLE);//隐藏标题
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
@@ -128,57 +120,24 @@ public class MainActivity extends AppCompatActivity{
             actionBar.hide();
         }
         mSettingsSP = getSharedPreferences(SettingsPref, MODE_PRIVATE);
-        String readPref = mSettingsSP.getString(AddressKey, "");
-        if(!readPref.equals("")){
-            BASE_URL = readPref;
+        String addrPref = mSettingsSP.getString(AddressKey, "");
+        if(!addrPref.equals("")){
+            BASE_URL = addrPref;
+        }
+
+        String modePref = mSettingsSP.getString(ModeKey, "");
+        if(!modePref.equals("")){
+            mPlayMode = modePref;
+        }else{
+            mSettingsSP.edit().putString(ModeKey, mPlayMode).apply();
         }
 
         VOD_URL_1 = "android.resource://" + getPackageName() + "/" + R.raw.movie;
         mPlayer1 = findViewById(R.id.player_1);
         mPlayer1.setUrl(VOD_URL_1);
-/*
-        String VOD_URL_2 = "android.resource://" + getPackageName() + "/" + R.raw.movie2;
-        mPlayer2 = findViewById(R.id.player_2);
-        mPlayer2.setUrl(VOD_URL_2);
-        String VOD_URL_3 = "android.resource://" + getPackageName() + "/" + R.raw.movie3;
-        mPlayer3 = findViewById(R.id.player_3);
-        mPlayer3.setUrl(VOD_URL_3);
-        String VOD_URL_4 = "android.resource://" + getPackageName() + "/" + R.raw.movie4;
-        mPlayer4 = findViewById(R.id.player_4);
-        mPlayer4.setUrl(VOD_URL_4);
-        String VOD_URL_5 = "android.resource://" + getPackageName() + "/" + R.raw.movie5;
-        mPlayer5 = findViewById(R.id.player_5);
-        mPlayer5.setUrl(VOD_URL_5);*/
+
         mFileList_1.add(VOD_URL_1);
-        /*mFileList_1.add(VOD_URL_2);
-        mFileList_1.add(VOD_URL_3);
-        mFileList_1.add(VOD_URL_4);
-        mFileList_1.add(VOD_URL_5);
 
-        mFileList_2.add(VOD_URL_2);
-        mFileList_2.add(VOD_URL_3);
-        mFileList_2.add(VOD_URL_4);
-        mFileList_2.add(VOD_URL_5);
-        mFileList_2.add(VOD_URL_1);
-
-        mFileList_3.add(VOD_URL_3);
-        mFileList_3.add(VOD_URL_4);
-        mFileList_3.add(VOD_URL_5);
-        mFileList_3.add(VOD_URL_1);
-        mFileList_3.add(VOD_URL_2);
-
-        mFileList_4.add(VOD_URL_4);
-        mFileList_4.add(VOD_URL_5);
-        mFileList_4.add(VOD_URL_1);
-        mFileList_4.add(VOD_URL_2);
-        mFileList_4.add(VOD_URL_3);
-
-
-        mFileList_5.add(VOD_URL_5);
-        mFileList_5.add(VOD_URL_1);
-        mFileList_5.add(VOD_URL_2);
-        mFileList_5.add(VOD_URL_3);
-        mFileList_5.add(VOD_URL_4);*/
 
         checkForUpdateResources();
         checkForUpdateAds();
@@ -280,6 +239,32 @@ public class MainActivity extends AppCompatActivity{
         }
     }
 
+    private boolean isReadPhoneStateGranted(){
+        mTelephonyManager = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
+//        TelephonyManager telephonyManager = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE)
+                    == PackageManager.PERMISSION_GRANTED) {
+                Log.v(TAG,"Permission is granted2");
+                mESN_Number = mTelephonyManager.getDeviceId();
+                return true;
+            } else {
+
+                Log.v(TAG,"Permission is revoked2");
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, 4);
+                return false;
+            }
+        }
+        else { //permission is automatically granted on sdk<23 upon installation
+            Log.v(TAG,"Permission is granted2");
+            mESN_Number = mTelephonyManager.getDeviceId();
+
+        }
+
+        Log.i(TAG, "ESN = "+mESN_Number);
+        return true;
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -305,6 +290,22 @@ public class MainActivity extends AppCompatActivity{
                     finish();
                 }
                 break;
+
+            /*case 4:
+                Log.d(TAG, "Read Phone State");
+                if(grantResults[0]== PackageManager.PERMISSION_GRANTED){
+                    Log.v(TAG,"Permission: "+permissions[0]+ "was "+grantResults[0]);
+                    //resume tasks needing this permission
+                    if (Build.VERSION.SDK_INT >= 23) {
+                        if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE)
+                                == PackageManager.PERMISSION_GRANTED) {
+                            mESN_Number = mTelephonyManager.getDeviceId();
+                        }
+                    }
+                }else{
+                    finish();
+                }
+                break;*/
         }
     }
 
@@ -365,250 +366,36 @@ public class MainActivity extends AppCompatActivity{
         mPlayer1.start();
         mPlayer1.setVisibility(View.GONE);
     }
-    /*
-    public void startPlayingVideo2(){
-        mPlayer2.setEnableAudioFocus(false);
-        mPlayer2.setUsingSurfaceView(true);
-        //        StandardVideoController controller2 = new StandardVideoController(this);
-        //        mPlayer2.setVideoController(controller2);
-//        mPlayer2.setLooping(true);
-        //        mPlayer2.setMute(true);
-        //        mPlayer2.start();
-        mPlayer2.addOnVideoViewStateChangeListener(new OnVideoViewStateChangeListener() {
-            @Override
-            public void onPlayerStateChanged(int playerState) {
-                switch (playerState) {
-                    case IjkVideoView.PLAYER_NORMAL://小屏
-                        break;
-                    case IjkVideoView.PLAYER_FULL_SCREEN://全屏
-                        break;
-                }
-            }
-            @Override
-            public void onPlayStateChanged(int playState) {
-                switch (playState) {
-                    case IjkVideoView.STATE_IDLE:
-                        break;
-                    case IjkVideoView.STATE_PREPARING:
-                        break;
-                    case IjkVideoView.STATE_PREPARED:
-                        break;
-                    case IjkVideoView.STATE_PLAYING:
-                        if(mTheFirstTimeRunning){
-                            startPlayingVideo3();
-                        }else{
-                            mPlayer2.setVisibility(View.VISIBLE);
-                        }
-                        break;
-                    case IjkVideoView.STATE_PAUSED:
-                        break;
-                    case IjkVideoView.STATE_BUFFERING:
-                        break;
-                    case IjkVideoView.STATE_BUFFERED:
-                        break;
-                    case IjkVideoView.STATE_PLAYBACK_COMPLETED:
-                        mPlayer_index2 ++;
-                        if(mPlayer_index2 >=mFileList_2.size())
-                            mPlayer_index2 = 0;
-                        mPlayer2.release();
-                        mPlayer2.setUrl(mFileList_2.get(mPlayer_index2));
-                        mPlayer2.start();
-                        mPlayer2.setVisibility(View.GONE);
 
-                        break;
-                    case IjkVideoView.STATE_ERROR:
-                        break;
-                }
-            }
-        });
+    public String getDeviceManufacturer() {
+        String manufacturer = Build.MANUFACTURER;
+            return capitalize(manufacturer);
 
-        mPlayer2.start();
-        mPlayer2.setVisibility(View.GONE);
     }
 
-    public void startPlayingVideo3(){
-        mPlayer3.setEnableAudioFocus(false);
-        mPlayer3.setUsingSurfaceView(true);
-        //        StandardVideoController controller2 = new StandardVideoController(this);
-        //        mPlayer2.setVideoController(controller2);
-//        mPlayer3.setLooping(true);
-        //        mPlayer2.setMute(true);
-        //        mPlayer2.start();
-        mPlayer3.addOnVideoViewStateChangeListener(new OnVideoViewStateChangeListener() {
-            @Override
-            public void onPlayerStateChanged(int playerState) {
-                switch (playerState) {
-                    case IjkVideoView.PLAYER_NORMAL://小屏
-                        break;
-                    case IjkVideoView.PLAYER_FULL_SCREEN://全屏
-                        break;
-                }
-            }
-            @Override
-            public void onPlayStateChanged(int playState) {
-                switch (playState) {
-                    case IjkVideoView.STATE_IDLE:
-                        break;
-                    case IjkVideoView.STATE_PREPARING:
-                        break;
-                    case IjkVideoView.STATE_PREPARED:
-                        break;
-                    case IjkVideoView.STATE_PLAYING:
-                        if(mTheFirstTimeRunning){
-                            startPlayingVideo4();
-                        }else{
-                            mPlayer3.setVisibility(View.VISIBLE);
-                        }
-                        break;
-                    case IjkVideoView.STATE_PAUSED:
-                        break;
-                    case IjkVideoView.STATE_BUFFERING:
-                        break;
-                    case IjkVideoView.STATE_BUFFERED:
-                        break;
-                    case IjkVideoView.STATE_PLAYBACK_COMPLETED:
-                        mPlayer_index3 ++;
-                        if(mPlayer_index3 >=mFileList_3.size())
-                            mPlayer_index3 = 0;
-                        mPlayer3.release();
-                        mPlayer3.setUrl(mFileList_3.get(mPlayer_index3));
-                        mPlayer3.start();
-                        mPlayer3.setVisibility(View.GONE);
-                        break;
-                    case IjkVideoView.STATE_ERROR:
-                        break;
-                }
-            }
-        });
+    public String getDeviceName() {
+        String name = Build.MODEL;
+        return capitalize(name);
 
-        mPlayer3.start();
-        mPlayer3.setVisibility(View.GONE);
     }
 
-    public void startPlayingVideo4(){
-        mPlayer4.setEnableAudioFocus(false);
-        mPlayer4.setUsingSurfaceView(true);
-        //        StandardVideoController controller2 = new StandardVideoController(this);
-        //        mPlayer2.setVideoController(controller2);
-//        mPlayer4.setLooping(true);
-        //        mPlayer2.setMute(true);
-        //        mPlayer2.start();
-        mPlayer4.addOnVideoViewStateChangeListener(new OnVideoViewStateChangeListener() {
-            @Override
-            public void onPlayerStateChanged(int playerState) {
-                switch (playerState) {
-                    case IjkVideoView.PLAYER_NORMAL://小屏
-                        break;
-                    case IjkVideoView.PLAYER_FULL_SCREEN://全屏
-                        break;
-                }
-            }
-            @Override
-            public void onPlayStateChanged(int playState) {
-                switch (playState) {
-                    case IjkVideoView.STATE_IDLE:
-                        break;
-                    case IjkVideoView.STATE_PREPARING:
-                        break;
-                    case IjkVideoView.STATE_PREPARED:
-                        break;
-                    case IjkVideoView.STATE_PLAYING:
-                        if(mTheFirstTimeRunning){
-                            startPlayingVideo5();
-                        }else{
-                            mPlayer4.setVisibility(View.VISIBLE);
-                        }
-                        break;
-                    case IjkVideoView.STATE_PAUSED:
-                        break;
-                    case IjkVideoView.STATE_BUFFERING:
-                        break;
-                    case IjkVideoView.STATE_BUFFERED:
-                        break;
-                    case IjkVideoView.STATE_PLAYBACK_COMPLETED:
-                        mPlayer_index4 ++;
-                        if(mPlayer_index4 >=mFileList_4.size())
-                            mPlayer_index4 = 0;
-                        mPlayer4.release();
-                        mPlayer4.setUrl(mFileList_4.get(mPlayer_index4));
-                        mPlayer4.start();
-                        mPlayer4.setVisibility(View.GONE);
-                        break;
-                    case IjkVideoView.STATE_ERROR:
-                        break;
-                }
-            }
-        });
+    public String getDeviceSerial() {
+        String device_sn = Build.SERIAL;
+        return capitalize(device_sn);
 
-        mPlayer4.start();
-        mPlayer4.setVisibility(View.GONE);
     }
 
-    public void startPlayingVideo5(){
-        mPlayer5.setEnableAudioFocus(false);
-        mPlayer5.setUsingSurfaceView(true);
-        //        StandardVideoController controller2 = new StandardVideoController(this);
-        //        mPlayer2.setVideoController(controller2);
-//        mPlayer5.setLooping(true);
-        //        mPlayer2.setMute(true);
-        //        mPlayer2.start();
-        mPlayer5.addOnVideoViewStateChangeListener(new OnVideoViewStateChangeListener() {
-            @Override
-            public void onPlayerStateChanged(int playerState) {
-                switch (playerState) {
-                    case IjkVideoView.PLAYER_NORMAL://小屏
-                        break;
-                    case IjkVideoView.PLAYER_FULL_SCREEN://全屏
-                        break;
-                }
-            }
-            @Override
-            public void onPlayStateChanged(int playState) {
-                switch (playState) {
-                    case IjkVideoView.STATE_IDLE:
-                        break;
-                    case IjkVideoView.STATE_PREPARING:
-                        break;
-                    case IjkVideoView.STATE_PREPARED:
-                        break;
-                    case IjkVideoView.STATE_PLAYING:
-                        if(mTheFirstTimeRunning){
-                            mPlayer1.setVisibility(View.VISIBLE);
-                            mPlayer2.setVisibility(View.VISIBLE);
-                            mPlayer3.setVisibility(View.VISIBLE);
-                            mPlayer4.setVisibility(View.VISIBLE);
-                            mPlayer5.setVisibility(View.VISIBLE);
-                            mTheFirstTimeRunning = false;
-                        }else{
-                            mPlayer5.setVisibility(View.VISIBLE);
-                        }
-
-                        break;
-                    case IjkVideoView.STATE_PAUSED:
-                        break;
-                    case IjkVideoView.STATE_BUFFERING:
-                        break;
-                    case IjkVideoView.STATE_BUFFERED:
-                        break;
-                    case IjkVideoView.STATE_PLAYBACK_COMPLETED:
-                        mPlayer_index5 ++;
-                        if(mPlayer_index5 >=mFileList_5.size())
-                            mPlayer_index5 = 0;
-                        mPlayer5.release();
-                        mPlayer5.setUrl(mFileList_5.get(mPlayer_index5));
-                        mPlayer5.start();
-                        mPlayer5.setVisibility(View.GONE);
-                        break;
-                    case IjkVideoView.STATE_ERROR:
-                        break;
-                }
-            }
-        });
-
-        mPlayer5.start();
-        mPlayer5.setVisibility(View.GONE);
+    private String capitalize(String s) {
+        if (s == null || s.length() == 0) {
+            return "";
+        }
+        char first = s.charAt(0);
+        if (Character.isUpperCase(first)) {
+            return s;
+        } else {
+            return Character.toUpperCase(first) + s.substring(1);
+        }
     }
-*/
     @Override
     protected void onPause() {
         super.onPause();
@@ -715,6 +502,7 @@ public class MainActivity extends AppCompatActivity{
         if(android_id.length()==15){
             android_id = android_id+"0";
         }
+
         int versionCode = BuildConfig.VERSION_CODE;
         String versionName = BuildConfig.VERSION_NAME;
         String IPAddress = AddressUtils.getIPAddress(true);
@@ -723,7 +511,10 @@ public class MainActivity extends AppCompatActivity{
             macAddress = AddressUtils.getMACAddress("eth0");
         }
         long timestamp = Calendar.getInstance().getTimeInMillis();
-        String ativate_string = BASE_URL+"/?act=api/device!activate&mac_addr="+macAddress+"&device_id="+android_id+"&version_code="+versionCode+"&version_name="+versionName+"&address="+IPAddress+"&timestamp="+timestamp;
+        String manufacturer = getDeviceManufacturer();
+        String device_name = getDeviceName();
+        String device_sn = getDeviceSerial();
+        String ativate_string = BASE_URL+"/?act=api/device!activate&mac_addr="+macAddress+"&device_id="+android_id+"&version_code="+versionCode+"&version_name="+versionName+"&address="+IPAddress+"&timestamp="+timestamp+"&manufacturer="+manufacturer+"&device_name="+device_name+"&device_sn="+device_sn;
         Log.e(TAG, ativate_string);
         try{
             URL ativate_link = new URL(ativate_string);

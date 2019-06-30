@@ -3,6 +3,7 @@ package com.angelfish.multiplayer.activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+
 import android.util.Log;
 
 
@@ -26,6 +27,8 @@ public class BootBroadcastReceiver extends BroadcastReceiver {
             context.startActivity(startIntent);
             //3.如果自启动服务
 //            context.startService(startIntent);
+        }else if (intent.getAction().equals(Intent.ACTION_MEDIA_MOUNTED)){
+            Log.e(TAG, "Intent.ACTION_MEDIA_MOUNTED");
         }
     }
 }
