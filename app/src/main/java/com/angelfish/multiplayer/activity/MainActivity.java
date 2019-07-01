@@ -51,6 +51,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -98,7 +99,7 @@ public class MainActivity extends AppCompatActivity{
     private static final String ModeKey = "ModeKey";
     private SharedPreferences mSettingsSP;
     private TelephonyManager mTelephonyManager ;
-    private String mESN_Number = "";
+//    private String mESN_Number = "";
     private String mPlayMode = "All";
 
     @Override
@@ -107,7 +108,7 @@ public class MainActivity extends AppCompatActivity{
         mContext = this.getApplicationContext();
         isWriteStoragePermissionGranted();
         isReadStoragePermissionGranted();
-//        isReadPhoneStateGranted();
+        isReadPhoneStateGranted();
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         requestWindowFeature(Window.FEATURE_NO_TITLE);//隐藏标题
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
@@ -248,7 +249,7 @@ public class MainActivity extends AppCompatActivity{
             if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE)
                     == PackageManager.PERMISSION_GRANTED) {
                 Log.v(TAG,"Permission is granted2");
-                mESN_Number = mTelephonyManager.getDeviceId();
+//                mESN_Number = mTelephonyManager.getDeviceId();
                 return true;
             } else {
 
@@ -259,11 +260,11 @@ public class MainActivity extends AppCompatActivity{
         }
         else { //permission is automatically granted on sdk<23 upon installation
             Log.v(TAG,"Permission is granted2");
-            mESN_Number = mTelephonyManager.getDeviceId();
+//            mESN_Number = mTelephonyManager.getDeviceId();
 
         }
 
-        Log.i(TAG, "ESN = "+mESN_Number);
+//        Log.i(TAG, "ESN = "+mESN_Number);
         return true;
     }
 
@@ -293,7 +294,7 @@ public class MainActivity extends AppCompatActivity{
                 }
                 break;
 
-            /*case 4:
+            case 4:
                 Log.d(TAG, "Read Phone State");
                 if(grantResults[0]== PackageManager.PERMISSION_GRANTED){
                     Log.v(TAG,"Permission: "+permissions[0]+ "was "+grantResults[0]);
@@ -301,13 +302,13 @@ public class MainActivity extends AppCompatActivity{
                     if (Build.VERSION.SDK_INT >= 23) {
                         if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE)
                                 == PackageManager.PERMISSION_GRANTED) {
-                            mESN_Number = mTelephonyManager.getDeviceId();
+//                            mESN_Number = mTelephonyManager.getDeviceId();
                         }
                     }
                 }else{
                     finish();
                 }
-                break;*/
+                break;
         }
     }
 
@@ -383,6 +384,30 @@ public class MainActivity extends AppCompatActivity{
 
     public String getDeviceSerial() {
         String device_sn = Build.SERIAL;
+                if (Build.VERSION.SDK_INT >= 26) {
+                        if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE)
+                                        == PackageManager.PERMISSION_GRANTED) {
+                            try {
+                                Class<?> c = Class.forName("android.os.SystemProperties");
+                                Method get = c.getMethod("get", String.class);
+                                Log.e(TAG, "before device_sn = "+device_sn);
+
+                                device_sn = (String) get.invoke(c, "gsm.sn1");
+                                if (device_sn.equals(""))
+                                    device_sn = (String) get.invoke(c, "ril.serialnumber");
+                                if (device_sn.equals(""))
+                                    device_sn = (String) get.invoke(c, "ro.serialno");
+                                if (device_sn.equals(""))
+                                    device_sn = (String) get.invoke(c, "sys.serialnumber");
+                                if (device_sn.equals(""))
+                                    device_sn = Build.getSerial();
+                                Log.e(TAG, "after device_sn = "+device_sn);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                device_sn = "";
+                            }
+                        }
+                    }
         return capitalize(device_sn);
 
     }
