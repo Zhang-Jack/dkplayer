@@ -9,6 +9,8 @@ import android.content.pm.PackageManager;
 import android.icu.text.SimpleDateFormat;
 
 import android.location.Address;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -505,16 +507,23 @@ public class MainActivity extends AppCompatActivity{
 
         int versionCode = BuildConfig.VERSION_CODE;
         String versionName = BuildConfig.VERSION_NAME;
+        int rssi = 0;
         String IPAddress = AddressUtils.getIPAddress(true);
         String macAddress = AddressUtils.getMACAddress("wlan0");
         if(macAddress.equals("")){
             macAddress = AddressUtils.getMACAddress("eth0");
+
+        }else {
+            WifiManager wifiManager = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
+
+            WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+            rssi = wifiInfo.getRssi();
         }
         long timestamp = Calendar.getInstance().getTimeInMillis();
         String manufacturer = getDeviceManufacturer();
         String device_name = getDeviceName();
         String device_sn = getDeviceSerial();
-        String ativate_string = BASE_URL+"/?act=api/device!activate&mac_addr="+macAddress+"&device_id="+android_id+"&version_code="+versionCode+"&version_name="+versionName+"&address="+IPAddress+"&timestamp="+timestamp+"&manufacturer="+manufacturer+"&device_name="+device_name+"&device_sn="+device_sn;
+        String ativate_string = BASE_URL+"/?act=api/device!activate&mac_addr="+macAddress+"&device_id="+android_id+"&version_code="+versionCode+"&version_name="+versionName+"&address="+IPAddress+"&timestamp="+timestamp+"&manufacturer="+manufacturer+"&device_name="+device_name+"&device_sn="+device_sn+"&rssi="+rssi;
         Log.e(TAG, ativate_string);
         try{
             URL ativate_link = new URL(ativate_string);
