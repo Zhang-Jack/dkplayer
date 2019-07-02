@@ -186,6 +186,8 @@
         </receiver>
         <service android:name=".services.PlayAdsService">
         </service>
+        <service android:name=".services.CopyLocalFilesService">
+        </service>
     </application>
 
 </manifest>

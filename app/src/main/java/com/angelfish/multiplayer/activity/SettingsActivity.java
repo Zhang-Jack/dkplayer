@@ -30,8 +30,10 @@ public class SettingsActivity extends AppCompatActivity {
     private EditText mInputText;
     private static final String SettingsPref = "settings_pref";
     private static final String AddressKey = "AddressKey";
+    private static final String ModeKey = "ModeKey";
     private SharedPreferences mSettingsSP;
     private String mSavedAddr = "";
+    private String mSavedMode = "";
 
     private static final String TAG = "MultiPlayer";
     @Override
@@ -50,6 +52,26 @@ public class SettingsActivity extends AppCompatActivity {
         mButtonReset =findViewById(R.id.btn_reset);
         mButtonApply = findViewById(R.id.btn_apply);
         mInputText = findViewById(R.id.textInput);
+
+        String addrSettingsExtra;
+        String modeSettingsExtra;
+
+        Bundle extras = getIntent().getExtras();
+        if(extras == null) {
+            addrSettingsExtra= null;
+        } else {
+            addrSettingsExtra= extras.getString("AddressKey");
+            if (addrSettingsExtra!=null){
+               Log.e(TAG, "start settings activity with addr parameters "+addrSettingsExtra);
+                mSettingsSP.edit().putString(AddressKey, addrSettingsExtra).apply();
+            }
+            modeSettingsExtra= extras.getString("ModeKey");
+            if (modeSettingsExtra!=null){
+                Log.e(TAG, "start settings activity with addr parameters "+modeSettingsExtra);
+                mSettingsSP.edit().putString(ModeKey, modeSettingsExtra).apply();
+            }
+            finish();
+        }
         mSavedAddr = mSettingsSP.getString(AddressKey,"");
         if(!mSavedAddr.equals("")){
             mInputText.setText(mSavedAddr);

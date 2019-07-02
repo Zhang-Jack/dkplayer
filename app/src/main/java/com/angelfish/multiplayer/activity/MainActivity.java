@@ -1,6 +1,7 @@
 package com.angelfish.multiplayer.activity;
 
 import android.Manifest;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -101,6 +102,8 @@ public class MainActivity extends AppCompatActivity{
     private TelephonyManager mTelephonyManager ;
 //    private String mESN_Number = "";
     private String mPlayMode = "All";
+    private boolean mLastCheckResult = false;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -153,6 +156,7 @@ public class MainActivity extends AppCompatActivity{
                     for(;;) {
                         Thread.sleep(UPDATE_INTEVAL); // 休眠60秒
                         if (mDownloadFilesCount == 0) {
+                            checkForLocalUpdate();
                             checkForUpdateAds();
                         }
                     }
@@ -165,6 +169,34 @@ public class MainActivity extends AppCompatActivity{
 
 
     }
+
+    public void checkForLocalUpdate(){
+        boolean isServiceRunning = isServiceRunning("com.angelfish.multiplayer.services.CopyLocalFilesService");
+        if (isServiceRunning == false && mLastCheckResult == true){
+            if (mPlayMode.equals("All")) {
+                updatePlayListwithLocalFiles();
+            }else if(mPlayMode.equals("Local")){
+                mFileList_1 = new ArrayList<>();
+                updatePlayListwithLocalFiles();
+            }
+        }
+        mLastCheckResult = isServiceRunning;
+    }
+
+    public void updatePlayListwithLocalFiles(){
+        File f = new File(Environment.getExternalStorageDirectory() + "/LocalVideos");
+        AddressUtils.checkFilePath(f);
+//        File dir1 = new File(f.getPath()+"/Player1/");
+//        AddressUtils.checkFilePath(dir1);
+        File[] files = f.listFiles();
+        for (int i = 0; i < files.length; i++){
+            if(!mFileList_1.contains(f.getAbsolutePath()+"/"+files[i].getName())) {
+                mFileList_1.add(f.getAbsolutePath() + "/" + files[i].getName());
+            }
+
+        }
+    }
+
 
     public void checkForUpdateResources(){
 //        File assets = new File("android.resource://" + getPackageName() + "/");
@@ -266,6 +298,19 @@ public class MainActivity extends AppCompatActivity{
 
 //        Log.i(TAG, "ESN = "+mESN_Number);
         return true;
+    }
+
+    /**
+     * 判断服务是否运行
+     */
+    private boolean isServiceRunning(final String className) {
+        ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningServiceInfo> info = activityManager.getRunningServices(Integer.MAX_VALUE);
+        if (info == null || info.size() == 0) return false;
+        for (ActivityManager.RunningServiceInfo aInfo : info) {
+            if (className.equals(aInfo.service.getClassName())) return true;
+        }
+        return false;
     }
 
     @Override

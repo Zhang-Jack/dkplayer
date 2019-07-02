@@ -1,5 +1,6 @@
 package com.angelfish.multiplayer.activity;
 
+import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +10,7 @@ import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.angelfish.multiplayer.services.CopyLocalFilesService;
 import com.angelfish.multiplayer.util.AddressUtils;
 
 import java.io.BufferedInputStream;
@@ -50,113 +52,16 @@ public class BootBroadcastReceiver extends BroadcastReceiver {
 //            context.startService(startIntent);
         }else if (intent.getAction().equals(Intent.ACTION_MEDIA_MOUNTED)){
             Log.e(TAG, "Intent.ACTION_MEDIA_MOUNTED");
-            List<String> pathForUSBDisks = getExtSDCardPath();
-            copyFromUSB(pathForUSBDisks);
+            Intent startServiceIntent = new Intent();  // 要启动的Activity
+            startServiceIntent = new Intent(context, CopyLocalFilesService.class);
+            context.startService(startServiceIntent);
 
         }
     }
 
-    /**
-     * 获取外置SD卡路径
-     * @return	应该就一条记录或空
-     */
-    public List<String> getExtSDCardPath()
-    {
-        List<String> lResult = new ArrayList<String>();
-        try {
-            Runtime rt = Runtime.getRuntime();
-            Process proc = rt.exec("mount");
-            InputStream is = proc.getInputStream();
-            InputStreamReader isr = new InputStreamReader(is);
-            BufferedReader br = new BufferedReader(isr);
-            String line;
-            while ((line = br.readLine()) != null) {
-                if (line.contains("/storage/"))
-                {
-                    String [] arr = line.split(" ");
-                    String path = arr[2];
-                    Log.e(TAG, "adding usb path to check "+path);
-                    if(!path.equals("/storage/emulated") && !path.equals("/storage/self") ){
-                        File file = new File(path);
-                        if (file.isDirectory())
-                        {
-                            lResult.add(path);
 
-                        }
-                    }
-                }
-            }
-            isr.close();
-        } catch (Exception e) {
-        }
-        return lResult;
-    }
 
-    public void copyFromUSB(List<String> pathForUSBDisks){
-        checkInnerDirectory();
-        for(int i =0; i < pathForUSBDisks.size(); i++){
-            String pathToCopy = pathForUSBDisks.get(i)+VIDEOSPATH;
-            Log.e(TAG, "check path "+pathToCopy);
-            File pathInUSB = new File(pathToCopy);
-            if(!pathInUSB.exists() || !pathInUSB.isDirectory()){
-                return;
-            }
-            File[] fileToCopy = pathInUSB.listFiles();
-            for (int j = 0; j < fileToCopy.length; i++) {
-                if (fileToCopy[j].isFile()) {
-                    // 源文件
-                    File sourceFile = fileToCopy[j];
-                    String nameToCopy = sourceFile.getName();
-                    // 目标文件
-                    File targetFile = new
-                            File(INNERFILEPATH+nameToCopy);
-                    if(!targetFile.exists()){
-                        try {
-                            copyFile(sourceFile, targetFile);
-                        }catch(IOException ex){
-                            ex.printStackTrace();
-                            targetFile.delete();
-                        }
 
-                    }
-                }
-
-            }
-        }
-    }
-
-    public void checkInnerDirectory(){
-        File f = new File(INNERFILEPATH);
-        AddressUtils.checkFilePath(f);
-        mLocalFiles = f.listFiles();
-
-    }
-
-    public static void copyFile(File sourceFile,File targetFile)
-            throws IOException {
-        // 新建文件输入流并对它进行缓冲
-        FileInputStream input = new FileInputStream(sourceFile);
-        BufferedInputStream inBuff=new BufferedInputStream(input);
-
-        // 新建文件输出流并对它进行缓冲
-        FileOutputStream output = new FileOutputStream(targetFile);
-        BufferedOutputStream outBuff=new BufferedOutputStream(output);
-
-        // 缓冲数组
-        byte[] b = new byte[1024 * 5];
-        int len;
-        while ((len =inBuff.read(b)) != -1) {
-            outBuff.write(b, 0, len);
-        }
-        // 刷新此缓冲的输出流
-        outBuff.flush();
-
-        //关闭流
-        inBuff.close();
-        outBuff.close();
-        output.close();
-        input.close();
-    }
 
 
 }
