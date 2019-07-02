@@ -30,11 +30,8 @@ import java.util.List;
 
 
 public class BootBroadcastReceiver extends BroadcastReceiver {
-    static final String ACTION = "android.intent.action.BOOT_COMPLETED";
+
     private static final String TAG = "MultiPlayer";
-    private static final String INNERFILEPATH  = Environment.getExternalStorageDirectory()+"/LocalVideos/";
-    private static final String VIDEOSPATH  = "/videos/";
-    private File[] mLocalFiles;
 
     @Override
     public void onReceive(Context context, Intent intent) {

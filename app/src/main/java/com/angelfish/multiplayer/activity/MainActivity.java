@@ -27,6 +27,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.view.Display;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -158,6 +159,7 @@ public class MainActivity extends AppCompatActivity{
                         if (mDownloadFilesCount == 0) {
                             checkForLocalUpdate();
                             checkForUpdateAds();
+                            checkForPlayModes();
                         }
                     }
                 }catch(InterruptedException ex){
@@ -168,6 +170,16 @@ public class MainActivity extends AppCompatActivity{
         }).start();
 
 
+    }
+    public void checkForPlayModes(){
+        String playMode = mSettingsSP.getString(ModeKey,"");
+        if(!playMode.equals(mPlayMode)){
+            Log.i(TAG, "play mode has been changed: "+playMode);
+            if(!isServiceRunning("com.angelfish.multiplayer.services.CopyLocalFilesService")){
+                checkForUpdateResources();
+
+            }
+        }
     }
 
     public void checkForLocalUpdate(){
@@ -205,27 +217,44 @@ public class MainActivity extends AppCompatActivity{
 //            mFileList_1.add(assets.getAbsolutePath()+"/"+default_movies[i].getName());
 //
 //        }
-        Toast.makeText(mContext, R.string.str_start_checking, Toast.LENGTH_SHORT).show();
-        File f = new File(Environment.getExternalStorageDirectory() + "/MultiPlayer");
-        AddressUtils.checkFilePath(f);
+        if(mTheFirstTimeRunning) {
+            Toast.makeText(mContext, R.string.str_start_checking, Toast.LENGTH_SHORT).show();
+            mTheFirstTimeRunning = false;
+        }
+        if(mPlayMode.equals("All")|| mPlayMode.equals("Web")) {
+            File f = new File(Environment.getExternalStorageDirectory() + "/MultiPlayer");
+            AddressUtils.checkFilePath(f);
 //        File dir1 = new File(f.getPath()+"/Player1/");
 //        AddressUtils.checkFilePath(dir1);
-        File[] files = f.listFiles();
-        if (files.length > 0 ){
-            if(mFileList_1.contains(VOD_URL_1)){
-                mFileList_1.remove(VOD_URL_1);
+            File[] files = f.listFiles();
+            if (files.length > 0) {
+                if (mFileList_1.contains(VOD_URL_1)) {
+                    mFileList_1.remove(VOD_URL_1);
+                } else if (mDownloadFilesCount == 0) {
+                    Log.i(TAG, "Update Play list when no downloading");
+                    mFileList_1 = new ArrayList<>();
+                }
             }
-            else if(mDownloadFilesCount == 0){
-                Log.i(TAG, "Update Play list when no downloading");
-                mFileList_1 = new ArrayList<>();
+
+
+            for (int i = 0; i < files.length; i++) {
+                if(!mFileList_1.contains(f.getAbsolutePath()+"/"+files[i].getName())) {
+                    mFileList_1.add(f.getAbsolutePath() + "/" + files[i].getName());
+                }
             }
+
+        }
+
+        if(mPlayMode.equals("All")|| mPlayMode.equals("Local")) {
+            if (mFileList_1.contains(VOD_URL_1)){
+                    mFileList_1.remove(VOD_URL_1);
+            }
+            updatePlayListwithLocalFiles();
+
+
         }
 
 
-        for (int i = 0; i < files.length; i++){
-                mFileList_1.add(f.getAbsolutePath()+"/"+files[i].getName());
-
-        }
         if (mFileList_1.size() == 0)
         {
             Log.i(TAG, "No file found in the dir!");
