@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
 import android.icu.text.SimpleDateFormat;
 
 import android.location.Address;
@@ -38,6 +39,7 @@ import android.widget.Toast;
 
 import com.angelfish.multiplayer.R;
 import com.angelfish.multiplayer.bean.VideoBean;
+import com.angelfish.multiplayer.util.MySqliteHelper;
 import com.angelfish.videocontroller.StandardVideoController;
 import com.angelfish.videoplayer.listener.OnVideoViewStateChangeListener;
 import com.angelfish.videoplayer.player.IjkVideoView;
@@ -104,6 +106,7 @@ public class MainActivity extends AppCompatActivity{
 //    private String mESN_Number = "";
     private String mPlayMode = "All";
     private boolean mLastCheckResult = false;
+    private MySqliteHelper mHelper = null;
 
 
     @Override
@@ -805,6 +808,11 @@ public class MainActivity extends AppCompatActivity{
 //            showDialog("Downloaded " + result + " bytes");
             if(response != null)
             {
+                if(mHelper == null){
+                    mHelper = new MySqliteHelper(mContext);
+                }
+                SQLiteDatabase db =  mHelper.getWritableDatabase();  //创建数据库
+                db.close();
                 mDownloadFilesCount = 0;
                 try {
                     String video_info_str = response.getString("data");
