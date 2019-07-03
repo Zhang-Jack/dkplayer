@@ -101,11 +101,13 @@ public class MainActivity extends AppCompatActivity{
     private static final String SettingsPref = "settings_pref";
     private static final String AddressKey = "AddressKey";
     private static final String ModeKey = "ModeKey";
+    private static final String DownloadFolder = "/MultiPlayer/";
+    private static final String LocalFolder = "/LocalVideos/";
     private SharedPreferences mSettingsSP;
     private TelephonyManager mTelephonyManager ;
 //    private String mESN_Number = "";
     private String mPlayMode = "All";
-    private boolean mLastCheckResult = false;
+//    private boolean mLastCheckResult = false;
     private MySqliteHelper mHelper = null;
 
 
@@ -160,6 +162,7 @@ public class MainActivity extends AppCompatActivity{
                     for(;;) {
                         Thread.sleep(UPDATE_INTEVAL); // 休眠60秒
                         if (mDownloadFilesCount == 0) {
+                            Log.e(TAG, "files number to display = "+mFileList_1.size());
                             checkForLocalUpdate();
                             checkForUpdateAds();
                             checkForPlayModes();
@@ -187,26 +190,38 @@ public class MainActivity extends AppCompatActivity{
 
     public void checkForLocalUpdate(){
         boolean isServiceRunning = isServiceRunning("com.angelfish.multiplayer.services.CopyLocalFilesService");
-        if (isServiceRunning == false && mLastCheckResult == true){
+        Log.i(TAG, "isServiceRunning = " +isServiceRunning);
+        File localpath = new File(Environment.getExternalStorageDirectory()+LocalFolder);
+        if(!localpath.exists()){
+            return;
+        }
+        if(isServiceRunning == true){
+            return;
+        }
+        File[] localFiles = localpath.listFiles();
+        if(localFiles.length == 0){
+            return;
+        }
+        if (isServiceRunning == false){
             if (mPlayMode.equals("All")) {
                 updatePlayListwithLocalFiles();
             }else if(mPlayMode.equals("Local")){
-                mFileList_1 = new ArrayList<>();
+                mFileList_1.clear();
                 updatePlayListwithLocalFiles();
             }
         }
-        mLastCheckResult = isServiceRunning;
+//        mLastCheckResult = isServiceRunning;
     }
 
     public void updatePlayListwithLocalFiles(){
-        File f = new File(Environment.getExternalStorageDirectory() + "/LocalVideos");
+        File f = new File(Environment.getExternalStorageDirectory() + LocalFolder);
         AddressUtils.checkFilePath(f);
 //        File dir1 = new File(f.getPath()+"/Player1/");
 //        AddressUtils.checkFilePath(dir1);
         File[] files = f.listFiles();
         for (int i = 0; i < files.length; i++){
-            if(!mFileList_1.contains(f.getAbsolutePath()+"/"+files[i].getName())) {
-                mFileList_1.add(f.getAbsolutePath() + "/" + files[i].getName());
+            if(!mFileList_1.contains(f.getAbsolutePath()+files[i].getName())) {
+                mFileList_1.add(f.getAbsolutePath()  + files[i].getName());
             }
 
         }
@@ -225,7 +240,7 @@ public class MainActivity extends AppCompatActivity{
             mTheFirstTimeRunning = false;
         }
         if(mPlayMode.equals("All")|| mPlayMode.equals("Web")) {
-            File f = new File(Environment.getExternalStorageDirectory() + "/MultiPlayer");
+            File f = new File(Environment.getExternalStorageDirectory() +DownloadFolder);
             AddressUtils.checkFilePath(f);
 //        File dir1 = new File(f.getPath()+"/Player1/");
 //        AddressUtils.checkFilePath(dir1);
@@ -235,7 +250,7 @@ public class MainActivity extends AppCompatActivity{
                     mFileList_1.remove(VOD_URL_1);
                 } else if (mDownloadFilesCount == 0) {
                     Log.i(TAG, "Update Play list when no downloading");
-                    mFileList_1 = new ArrayList<>();
+                    mFileList_1.clear();
                 }
             }
 
@@ -665,7 +680,7 @@ public class MainActivity extends AppCompatActivity{
                     fileName = urls[i].toString().substring(urls[i].toString().lastIndexOf("/") + 1);
 
                     InputStream input = new BufferedInputStream(conexion.getInputStream());
-                    OutputStream output = new FileOutputStream(Environment.getExternalStorageDirectory() + "/MultiPlayer/"+fileName);
+                    OutputStream output = new FileOutputStream(Environment.getExternalStorageDirectory() + DownloadFolder+fileName);
                     Log.d(TAG, "save to temp ");
                     byte data[] = new byte[1024];
 
@@ -684,7 +699,7 @@ public class MainActivity extends AppCompatActivity{
                 }
             }catch(Exception e){
                 if(!fileName.equals("")){
-                    File f = new File(Environment.getExternalStorageDirectory() + "/MultiPlayer/"+fileName);
+                    File f = new File(Environment.getExternalStorageDirectory() +DownloadFolder+fileName);
                     f.delete();
                 }
                 mDownloadFilesCount--;
@@ -707,7 +722,7 @@ public class MainActivity extends AppCompatActivity{
                 mDownloadFilesCount--;
             }
             Toast.makeText(mContext, fileName+getString(R.string.str_downloaded), Toast.LENGTH_LONG).show();
-            mFileList_1.add(Environment.getExternalStorageDirectory() + "/MultiPlayer/"+fileName);
+            mFileList_1.add(Environment.getExternalStorageDirectory() + DownloadFolder+fileName);
             //重新设置数据
             if(mFileList_1.contains(VOD_URL_1)){
                 mFileList_1.remove(VOD_URL_1);
@@ -826,8 +841,8 @@ public class MainActivity extends AppCompatActivity{
                         Log.i(TAG, "name ="+name);
                         Log.i(TAG, "url ="+remote_url);
                         String fileName = remote_url.substring(remote_url.lastIndexOf("/") + 1);
-                        File file_to_check = new File(Environment.getExternalStorageDirectory() + "/MultiPlayer/"+fileName);
-                        mParserFromJson.add(Environment.getExternalStorageDirectory() + "/MultiPlayer/"+fileName);
+                        File file_to_check = new File(Environment.getExternalStorageDirectory() + DownloadFolder+fileName);
+                        mParserFromJson.add(Environment.getExternalStorageDirectory() + DownloadFolder+fileName);
                         if(!file_to_check.exists()){
                             if(i==0){
                                 Toast.makeText(mContext, R.string.str_start_downloading, Toast.LENGTH_SHORT).show();

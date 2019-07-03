@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
@@ -27,6 +28,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -37,6 +42,7 @@ public class CopyLocalFilesService extends Service {
     private static final String INNERFILEPATH  = Environment.getExternalStorageDirectory()+"/LocalVideos/";
     private static final String VIDEOSPATH  = "/videos/";
     private int mCopyingFilesCount = 0;
+    private File[] mFileToCopy;
     /** For showing and hiding our notification. */
 //    NotificationManager mNM;
     /** Keeps track of all current registered clients. */
@@ -106,7 +112,7 @@ public class CopyLocalFilesService extends Service {
     @Override
     public void onCreate() {
 //        mNM = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
-
+        super.onCreate();
         // Display a notification about us starting.
 //        showNotification();
     }
@@ -189,32 +195,19 @@ public class CopyLocalFilesService extends Service {
             if(!pathInUSB.exists() || !pathInUSB.isDirectory()){
                 return;
             }
-            File[] fileToCopy = pathInUSB.listFiles();
-            for (int j = 0; j < fileToCopy.length; i++) {
-                if (fileToCopy[j].isFile()) {
-                    // 源文件
-                    File sourceFile = fileToCopy[j];
-                    String nameToCopy = sourceFile.getName();
-                    // 目标文件
-                    File targetFile = new
-                            File(INNERFILEPATH+nameToCopy);
-                    if(!targetFile.exists()){
+//            File[] fileToCopy = pathInUSB.listFiles();
+            mFileToCopy = pathInUSB.listFiles();
+
                         try {
-                            copyFile(sourceFile, targetFile);
-                            mCopyingFilesCount++;
-                        }catch(IOException ex){
+
+                            new CopyFilesTask().execute();
+                        }catch(Exception ex){
+                            Log.e(TAG,"URL parsing error");
                             ex.printStackTrace();
-                            targetFile.delete();
-                            mCopyingFilesCount--;
                         }
 
-                    }
-                }
-
-            }
         }
-        mCopyingFilesCount = 0;
-        this.stopSelf();
+
     }
 
     public void checkInnerDirectory(){
@@ -224,29 +217,68 @@ public class CopyLocalFilesService extends Service {
 
     }
 
-    public static void copyFile(File sourceFile,File targetFile)
-            throws IOException {
-        // 新建文件输入流并对它进行缓冲
-        FileInputStream input = new FileInputStream(sourceFile);
-        BufferedInputStream inBuff=new BufferedInputStream(input);
+    private class CopyFilesTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void...arg0) {
+            int count = mFileToCopy.length;
+            long totalSize = 0;
+            String fileName = "";
+            try{
+                for (int i = 0; i < count; i++) {
+                    FileInputStream input = new FileInputStream(mFileToCopy[i]);
+                    BufferedInputStream inBuff=new BufferedInputStream(input);
+                    fileName = mFileToCopy[i].getName();
+                    File targetFile = new
+                            File(INNERFILEPATH+fileName);
+                    if(targetFile.exists()){
+                        continue;
+                    }
+                    // 新建文件输出流并对它进行缓冲
+                    FileOutputStream output = new FileOutputStream(targetFile);
+                    BufferedOutputStream outBuff=new BufferedOutputStream(output);
 
-        // 新建文件输出流并对它进行缓冲
-        FileOutputStream output = new FileOutputStream(targetFile);
-        BufferedOutputStream outBuff=new BufferedOutputStream(output);
+                    // 缓冲数组
+                    byte[] b = new byte[1024 * 5];
+                    int len;
+                    mCopyingFilesCount ++;
+                    while ((len =inBuff.read(b)) != -1) {
+                        outBuff.write(b, 0, len);
+                    }
+                    // 刷新此缓冲的输出流
+                    outBuff.flush();
+                    mCopyingFilesCount --;
 
-        // 缓冲数组
-        byte[] b = new byte[1024 * 5];
-        int len;
-        while ((len =inBuff.read(b)) != -1) {
-            outBuff.write(b, 0, len);
+                    //关闭流
+                    inBuff.close();
+                    outBuff.close();
+                    output.close();
+                    input.close();
+                }
+                checkCopyFinished();
+            }catch(Exception e){
+                if(!fileName.equals("")){
+                    File f = new File(INNERFILEPATH+fileName);
+                    f.delete();
+                }
+                mCopyingFilesCount--;
+                return null;
+            }
+            return null;
         }
-        // 刷新此缓冲的输出流
-        outBuff.flush();
 
-        //关闭流
-        inBuff.close();
-        outBuff.close();
-        output.close();
-        input.close();
+        protected void onProgressUpdate() {
+//            setProgressPercent(progress[0]);
+        }
+
+        protected void onPostExecute() {
+            checkCopyFinished();
+        }
     }
+    public void checkCopyFinished() {
+        Log.e(TAG, "checkCopyFinished mCopyingFilesCount ="+mCopyingFilesCount);
+        if (mCopyingFilesCount <= 0) {
+            this.stopSelf();
+        }
+    }
+
 }
