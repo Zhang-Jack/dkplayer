@@ -260,7 +260,8 @@ public class CopyLocalFilesService extends Service {
                     File f = new File(INNERFILEPATH+fileName);
                     f.delete();
                 }
-                mCopyingFilesCount--;
+                stopService();
+
                 return null;
             }
             return null;
@@ -279,6 +280,10 @@ public class CopyLocalFilesService extends Service {
         if (mCopyingFilesCount <= 0) {
             this.stopSelf();
         }
+    }
+
+    public void stopService(){
+        this.stopSelf();
     }
 
 }

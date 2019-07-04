@@ -10,6 +10,7 @@ public class Play_Data {
     private long EXPIRE_TIME;
     private int TYPE;
     private int SORT;
+    private int LENGTH;
 
     public Play_Data(int ID, String name, String remote_url, String filename, int remote_id, int play_times, long expire_time, int type, int sort) {
         this.ID = ID;
@@ -95,6 +96,13 @@ public class Play_Data {
         this.SORT = sort;
     }
 
+    public int getLENGTH() {
+        return LENGTH;
+    }
+
+    public void setLENGTH(int length) {
+        this.LENGTH = length;
+    }
 
 }
 

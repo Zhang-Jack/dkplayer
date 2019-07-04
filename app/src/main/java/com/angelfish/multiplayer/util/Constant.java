@@ -16,6 +16,6 @@ public class Constant {
     public static final String EXPIRE_TIME = "expire_time"; // 失效时间
     public static final String TYPE = "type";
     public static final String SORT = "sort";
-
+    public static final String LENGTH = "length";
 }
 

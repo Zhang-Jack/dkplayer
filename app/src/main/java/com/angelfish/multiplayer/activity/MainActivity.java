@@ -96,11 +96,12 @@ public class MainActivity extends AppCompatActivity{
     private String VOD_URL_1 = "";
 
 
-    private static final int UPDATE_INTEVAL = 60000;
+    private static final int UPDATE_INTERVAL = 60;
     private String BASE_URL = "http://projector.auong.com/";
     private static final String SettingsPref = "settings_pref";
     private static final String AddressKey = "AddressKey";
     private static final String ModeKey = "ModeKey";
+    private static final String Update_Interval_Key = "Update_Interval_Key";
     private static final String DownloadFolder = "/MultiPlayer/";
     private static final String LocalFolder = "/LocalVideos/";
     private SharedPreferences mSettingsSP;
@@ -109,6 +110,10 @@ public class MainActivity extends AppCompatActivity{
     private String mPlayMode = "All";
 //    private boolean mLastCheckResult = false;
     private MySqliteHelper mHelper = null;
+    private boolean mNeedUpdateIndex = false;
+    private int mFilesInWebFolder = 0;
+    private int mFilesInLocalFolder = 0;
+    private int mUpdateInterval = UPDATE_INTERVAL;
 
 
     @Override
@@ -149,6 +154,7 @@ public class MainActivity extends AppCompatActivity{
         mPlayer1.setUrl(VOD_URL_1);
 
         mFileList_1.add(VOD_URL_1);
+        mUpdateInterval = mSettingsSP.getInt(Update_Interval_Key, UPDATE_INTERVAL);
 
 
         checkForUpdateResources();
@@ -160,7 +166,8 @@ public class MainActivity extends AppCompatActivity{
             public void run() {
                 try {
                     for(;;) {
-                        Thread.sleep(UPDATE_INTEVAL); // 休眠60秒
+
+                        Thread.sleep(mUpdateInterval*1000); // 休眠60秒
                         if (mDownloadFilesCount == 0) {
                             Log.e(TAG, "files number to display = "+mFileList_1.size());
                             checkForLocalUpdate();
@@ -219,11 +226,17 @@ public class MainActivity extends AppCompatActivity{
 //        File dir1 = new File(f.getPath()+"/Player1/");
 //        AddressUtils.checkFilePath(dir1);
         File[] files = f.listFiles();
+        int fileAdded = 0;
+
         for (int i = 0; i < files.length; i++){
-            if(!mFileList_1.contains(f.getAbsolutePath()+files[i].getName())) {
-                mFileList_1.add(f.getAbsolutePath()  + files[i].getName());
+            if(!mFileList_1.contains(f.getAbsolutePath()+"/"+files[i].getName())) {
+                mFileList_1.add(f.getAbsolutePath()+"/"+ files[i].getName());
+                fileAdded ++;
             }
 
+        }
+        if(fileAdded>0) {
+            mNeedUpdateIndex = true;
         }
     }
 
@@ -245,6 +258,7 @@ public class MainActivity extends AppCompatActivity{
 //        File dir1 = new File(f.getPath()+"/Player1/");
 //        AddressUtils.checkFilePath(dir1);
             File[] files = f.listFiles();
+            mFilesInWebFolder = files.length;
             if (files.length > 0) {
                 if (mFileList_1.contains(VOD_URL_1)) {
                     mFileList_1.remove(VOD_URL_1);
@@ -268,8 +282,6 @@ public class MainActivity extends AppCompatActivity{
                     mFileList_1.remove(VOD_URL_1);
             }
             updatePlayListwithLocalFiles();
-
-
         }
 
 
@@ -448,6 +460,11 @@ public class MainActivity extends AppCompatActivity{
                         if(mPlayer_index1 >=mFileList_1.size())
                             mPlayer_index1 = 0;
                         mPlayer1.release();
+
+                        if(mNeedUpdateIndex){
+                            mPlayer_index1 = mFilesInWebFolder;
+                            mNeedUpdateIndex = false;
+                        }
                         mPlayer1.setUrl(mFileList_1.get(mPlayer_index1));
                         mPlayer1.start();
 
@@ -774,6 +791,16 @@ public class MainActivity extends AppCompatActivity{
                 try {
                     String token = response.getString("token");
                     String resource_string = BASE_URL+"/?act=api/resource&type="+type+"&token="+token;
+                    String remote_url = response.getString("url")+"/";
+                    mSettingsSP.edit().putString(AddressKey, remote_url).apply();
+                    String play_mode = response.getString("play_order");
+                    setPlayMode(play_mode);
+                    mUpdateInterval = response.getInt("heartbeat");
+                    mSettingsSP.edit().putInt(Update_Interval_Key, mUpdateInterval).apply();
+                    Log.i(TAG, "remote url ="+remote_url);
+                    Log.i(TAG, "interval ="+mUpdateInterval);
+                    Log.i(TAG, "play_mode = "+play_mode);
+
                     try {
                         URL resource_link = new URL(resource_string);
                         new GetVideoJsonTask().execute(resource_link);
@@ -889,5 +916,16 @@ public class MainActivity extends AppCompatActivity{
                 checkForUpdateResources();
             }
         }
+    }
+
+    public void setPlayMode(String play_mode){
+        if(play_mode.equals("0")){
+            play_mode = "All";
+        }else if(play_mode.equals("1")){
+            play_mode = "Web";
+        }else if(play_mode.equals("2")){
+            play_mode = "Local";
+        }
+        mSettingsSP.edit().putString(ModeKey, play_mode).apply();
     }
 }

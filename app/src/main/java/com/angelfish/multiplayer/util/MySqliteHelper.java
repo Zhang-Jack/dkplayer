@@ -33,8 +33,9 @@ public class MySqliteHelper extends SQLiteOpenHelper {
                 Constant.REMOTE_ID+" Integer,"+
                 Constant.PLAY_TIMES+" Integer,"+
                 Constant.EXPIRE_TIME+" Integer,"+
-                Constant.TYPE+" Integer,"+
-                Constant.SORT+" Integer)";
+                Constant.TYPE +" Integer,"+
+                Constant.SORT +" Integer,"+
+                Constant.LENGTH +"Integer)";
         sqLiteDatabase.execSQL(sql);
 
 
