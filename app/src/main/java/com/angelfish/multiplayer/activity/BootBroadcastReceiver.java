@@ -47,12 +47,6 @@ public class BootBroadcastReceiver extends BroadcastReceiver {
             context.startActivity(startIntent);
             //3.如果自启动服务
 //            context.startService(startIntent);
-        }else if (intent.getAction().equals(Intent.ACTION_MEDIA_MOUNTED)){
-            Log.e(TAG, "Intent.ACTION_MEDIA_MOUNTED");
-            Intent startServiceIntent = new Intent();  // 要启动的Activity
-            startServiceIntent = new Intent(context, CopyLocalFilesService.class);
-            context.startService(startServiceIntent);
-
         }
     }
 
