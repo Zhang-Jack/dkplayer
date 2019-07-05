@@ -470,6 +470,15 @@ public class MainActivity extends AppCompatActivity{
 
                         break;
                     case IjkVideoView.STATE_ERROR:
+                        File fileCausedErr = new File(mFileList_1.get(mPlayer_index1));
+                        fileCausedErr.delete();
+                        mPlayer_index1 ++;
+                        if(mPlayer_index1 >=mFileList_1.size())
+                            mPlayer_index1 = 0;
+                        mPlayer1.release();
+
+                        mPlayer1.setUrl(mFileList_1.get(mPlayer_index1));
+                        mPlayer1.start();
                         break;
                 }
             }
