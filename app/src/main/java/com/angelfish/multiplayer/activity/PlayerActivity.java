@@ -472,6 +472,10 @@ public class PlayerActivity extends AppCompatActivity{
                     case IjkVideoView.STATE_ERROR:
                         File fileCausedErr = new File(mFileList_1.get(mPlayer_index1));
                         fileCausedErr.delete();
+                        mFileList_1.remove(mPlayer_index1);
+                        if(mFileList_1.size() == 0){
+                            mFileList_1.add(VOD_URL_1);
+                        }
                         mPlayer_index1 ++;
                         if(mPlayer_index1 >=mFileList_1.size())
                             mPlayer_index1 = 0;
