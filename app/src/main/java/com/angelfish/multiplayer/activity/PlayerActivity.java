@@ -66,6 +66,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 import android.provider.Settings.Secure;
 
@@ -772,17 +775,33 @@ public class PlayerActivity extends AppCompatActivity{
 
             try{
                 for (int i = 0; i < count; i++) {
-                    URLConnection conexion = urls[i].openConnection();
-                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(conexion.getInputStream()));
+                    OkHttpClient client = new OkHttpClient.Builder()
+                            .retryOnConnectionFailure(false)
+                            .build();
+                    Response response = client.newCall(new Request.Builder()
+                            .url(urls[i])
+                            .build()).execute();
+                    try{
+                        String result = response.body().string();
+                        Log.e(TAG, result);
+                        return new JSONObject(result);
+                    }finally {
+                        response.close();
 
-                    StringBuffer stringBuffer = new StringBuffer();
-                    String line;
-                    while ((line = bufferedReader.readLine()) != null)
-                    {
-                        stringBuffer.append(line);
                     }
 
-                    return new JSONObject(stringBuffer.toString());
+//                    URLConnection conexion = urls[i].openConnection();
+//                    conexion.setRequestProperty("Connection", "close");
+//                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(conexion.getInputStream()));
+//
+//                    StringBuffer stringBuffer = new StringBuffer();
+//                    String line;
+//                    while ((line = bufferedReader.readLine()) != null)
+//                    {
+//                        stringBuffer.append(line);
+//                    }
+
+//                    return new JSONObject(stringBuffer.toString());
                 }
             }catch(Exception ex){
 //                Toast.makeText(mContext, R.string.str_connection_error, Toast.LENGTH_LONG).show();
@@ -836,17 +855,33 @@ public class PlayerActivity extends AppCompatActivity{
 
             try{
                 for (int i = 0; i < count; i++) {
-                    URLConnection conexion = urls[i].openConnection();
-                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(conexion.getInputStream()));
+                    OkHttpClient client = new OkHttpClient.Builder()
+                            .retryOnConnectionFailure(false)
+                            .build();
+                    Response response = client.newCall(new Request.Builder()
+                            .url(urls[i])
+                            .build()).execute();
+                    try{
+                        String result = response.body().string();
+                        Log.e(TAG, result);
+                        return new JSONObject(result);
+                    }finally {
+                        response.close();
 
-                    StringBuffer stringBuffer = new StringBuffer();
-                    String line;
-                    while ((line = bufferedReader.readLine()) != null)
-                    {
-                        stringBuffer.append(line);
                     }
 
-                    return new JSONObject(stringBuffer.toString());
+//                    URLConnection conexion = urls[i].openConnection();
+//                    conexion.setRequestProperty("Connection", "close");
+//                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(conexion.getInputStream()));
+//
+//                    StringBuffer stringBuffer = new StringBuffer();
+//                    String line;
+//                    while ((line = bufferedReader.readLine()) != null)
+//                    {
+//                        stringBuffer.append(line);
+//                    }
+//
+//                    return new JSONObject(stringBuffer.toString());
                 }
             }catch(Exception ex){
                 ex.printStackTrace();

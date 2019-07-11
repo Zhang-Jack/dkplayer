@@ -70,7 +70,7 @@ public class SettingsActivity extends AppCompatActivity {
                 Log.e(TAG, "start settings activity with addr parameters "+modeSettingsExtra);
                 mSettingsSP.edit().putString(ModeKey, modeSettingsExtra).apply();
             }
-            finish();
+//            finish();
         }
         mSavedAddr = mSettingsSP.getString(AddressKey,"");
         if(!mSavedAddr.equals("")){

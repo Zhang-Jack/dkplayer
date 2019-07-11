@@ -13,7 +13,7 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 30
-        versionName "1.0.5"
+        versionName "1.0.6"
 
         ndk {
             //打包时保留armeabi-v7a x86 so
@@ -84,7 +84,8 @@ dependencies {
     //缓存
     implementation 'com.danikula:videocache:2.7.1'
     implementation 'com.android.support.constraint:constraint-layout:1.1.0'
-    implementation "com.liulishuo.okdownload:okhttp:1.0.5"
+//    implementation "com.liulishuo.okdownload:okhttp:1.0.3"
+    implementation("com.squareup.okhttp3:okhttp:4.0.1")
     implementation 'com.google.code.gson:gson:2.8.5'
 
 
