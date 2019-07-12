@@ -26,6 +26,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
+import android.telecom.Call;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Display;
@@ -52,6 +53,7 @@ import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -704,31 +706,38 @@ public class PlayerActivity extends AppCompatActivity{
             String fileName = "";
             try{
                 for (int i = 0; i < count; i++) {
-                    URLConnection conexion = urls[i].openConnection();
-                    conexion.connect();
+//                    URLConnection conexion = urls[i].openConnection();
+//                    conexion.connect();
+                    OkHttpClient client = new OkHttpClient();
 
-                    int lenghtOfFile = conexion.getContentLength();
-                    Log.d(TAG, "Lenght of file: " + lenghtOfFile);
-                    totalSize += lenghtOfFile;
-                    fileName = urls[i].toString().substring(urls[i].toString().lastIndexOf("/") + 1);
+                    try{
+                        Response response = client.newCall(new Request.Builder().url(urls[i]).get().build()).execute();
+                        long lenghtOfFile = response.body().contentLength();
+                        Log.d(TAG, "Lenght of file: " + lenghtOfFile);
+                        totalSize += lenghtOfFile;
+                        fileName = urls[i].toString().substring(urls[i].toString().lastIndexOf("/") + 1);
 
-                    InputStream input = new BufferedInputStream(conexion.getInputStream());
-                    OutputStream output = new FileOutputStream(Environment.getExternalStorageDirectory() + DownloadFolder+fileName);
-                    Log.d(TAG, "save to temp ");
-                    byte data[] = new byte[1024];
+//                        InputStream input = new BufferedInputStream(conexion.getInputStream());
+                        InputStream input = new BufferedInputStream(response.body().byteStream());
+                        OutputStream output = new FileOutputStream(Environment.getExternalStorageDirectory() + DownloadFolder+fileName);
+                        Log.d(TAG, "save to temp ");
+                        byte data[] = new byte[1024*5];
 
-                    long total = 0;
+                        long total = 0;
 
-                    while ((count = input.read(data)) != -1) {
-                        total += count;
-//                        Log.d(TAG, "downlaod bytes: " + total);
-                        publishProgress((int)((total*100)/lenghtOfFile));
-                        output.write(data, 0, count);
+                        while ((count = input.read(data)) != -1) {
+                            total += count;
+    //                        Log.d(TAG, "downlaod bytes: " + total);
+                            publishProgress((int)((total*100)/lenghtOfFile));
+                            output.write(data, 0, count);
+                        }
+
+                        output.flush();
+                        output.close();
+                        input.close();
+                    }catch (IOException ignore) {
+                        return null;
                     }
-
-                    output.flush();
-                    output.close();
-                    input.close();
                 }
             }catch(Exception e){
                 if(!fileName.equals("")){
