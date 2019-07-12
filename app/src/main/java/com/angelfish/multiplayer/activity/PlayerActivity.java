@@ -173,6 +173,7 @@ public class PlayerActivity extends AppCompatActivity{
                     for(;;) {
 
                         Thread.sleep(mUpdateInterval*1000); // 休眠60秒
+                        Log.e(TAG, "routine check mDownloadFilesCount = "+mDownloadFilesCount);
                         if (mDownloadFilesCount == 0) {
                             Log.e(TAG, "files number to display = "+mFileList_1.size());
                             checkForLocalUpdate();
@@ -916,6 +917,7 @@ public class PlayerActivity extends AppCompatActivity{
                 try {
                     String video_info_str = response.getString("data");
                     JSONArray video_info = new JSONArray(video_info_str);
+                    mParserFromJson.clear();
                     for (int i = 0; i < video_info.length(); i++){
                         JSONObject video = video_info.getJSONObject(i);
                         String id = video.getString("id");
@@ -961,7 +963,10 @@ public class PlayerActivity extends AppCompatActivity{
             for (int i =0; i< mFileList_1.size(); i++){
                 String filePathToCheck = mFileList_1.get(i).toString();
                 Log.i(TAG,"filePathToCheck ="+filePathToCheck);
-                if(!mParserFromJson.contains(mFileList_1.get(i)) && filePathToCheck.startsWith("/storage/emulated/0/MultiPlayer/") ){
+                Log.i(TAG,"mParserFromJson =");
+                if(i < mParserFromJson.size())
+                    Log.i(TAG, mParserFromJson.get(i));
+                if(!mParserFromJson.contains(filePathToCheck) && filePathToCheck.startsWith("/storage/emulated/0/MultiPlayer/") ){
 //                    Toast.makeText(mContext, "Json from website does not contains"+filePathToCheck, Toast.LENGTH_LONG).show();
 //                    mFileList_1.remove(i);
                     File fileToDelete = new File(mFileList_1.get(i));
