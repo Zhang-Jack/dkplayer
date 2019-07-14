@@ -52,11 +52,13 @@ import com.google.gson.JsonParser;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -109,6 +111,7 @@ public class PlayerActivity extends AppCompatActivity{
     private static final String Update_Interval_Key = "Update_Interval_Key";
     private static final String DownloadFolder = "/MultiPlayer/";
     private static final String LocalFolder = "/LocalVideos/";
+    private static final String ServerFile = "/server.cfg";
     private SharedPreferences mSettingsSP;
     private TelephonyManager mTelephonyManager ;
     //    private String mESN_Number = "";
@@ -142,9 +145,10 @@ public class PlayerActivity extends AppCompatActivity{
             actionBar.hide();
         }
         mSettingsSP = getSharedPreferences(SettingsPref, MODE_PRIVATE);
-        String addrPref = mSettingsSP.getString(AddressKey, "");
-        if(!addrPref.equals("")){
-            BASE_URL = addrPref;
+//        String addrPref = mSettingsSP.getString(AddressKey, "");
+        String addrFromFile = readStringFromFile();
+        if(!addrFromFile.equals("")){
+            BASE_URL = addrFromFile;
         }
 
         String modePref = mSettingsSP.getString(ModeKey, "");
@@ -199,6 +203,62 @@ public class PlayerActivity extends AppCompatActivity{
 
             }
         }
+    }
+
+    public String readStringFromFile(){
+        String webSite = "";
+        File serverConfig = new File(Environment.getExternalStorageDirectory() + ServerFile);
+        if (serverConfig.exists() ){
+            try {
+                FileInputStream fis = new FileInputStream(serverConfig);
+                StringBuilder stringBuilder = new StringBuilder();
+                InputStreamReader inputStreamReader = new InputStreamReader(fis);
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                while ( (webSite = bufferedReader.readLine()) != null ) {
+                    stringBuilder.append(webSite);
+                }
+                fis.close();
+                webSite = stringBuilder.toString();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+
+
+        }
+        return webSite;
+    }
+
+    public void saveNewWebsiteToFile(String website){
+        FileOutputStream FoutS = null;
+        OutputStreamWriter outSW = null;
+
+        try {
+            FoutS = new FileOutputStream(new File(Environment.getExternalStorageDirectory()+ServerFile));
+            outSW = new OutputStreamWriter(FoutS);
+
+            outSW.write(website);
+
+            outSW.flush();
+            // Rest of try block here
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }finally {
+
+            try {
+
+                outSW.close();
+
+                FoutS.close();
+
+            } catch (IOException e) {
+
+                e.printStackTrace();
+
+            }
+
+        }
+
+
     }
 
     public void checkForLocalUpdate(){
@@ -834,7 +894,8 @@ public class PlayerActivity extends AppCompatActivity{
                     String token = response.getString("token");
                     String resource_string = BASE_URL+"/?act=api/resource&type="+type+"&token="+token;
                     String remote_url = response.getString("url")+"/";
-                    mSettingsSP.edit().putString(AddressKey, remote_url).apply();
+//                    mSettingsSP.edit().putString(AddressKey, remote_url).apply();
+                    saveNewWebsiteToFile(remote_url);
                     String play_mode = response.getString("play_order");
                     setPlayMode(play_mode);
                     mUpdateInterval = response.getInt("heartbeat");

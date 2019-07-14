@@ -24,6 +24,19 @@
         tools:ignore="GoogleAppIndexingWarning"
         android:installLocation="internalOnly">
         <activity
+            android:name=".activity.SettingsActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="landscape"
+            android:theme="@style/Theme.AppCompat.Light"
+            android:label="@string/str_settings"
+            android:windowSoftInputMode="stateHidden"
+            android:taskAffinity=".SettingsActivity"
+            android:clearTaskOnLaunch="true"
+            android:launchMode="singleTask"
+            >
+
+        </activity>
+        <activity
             android:name=".activity.MainActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="landscape"
@@ -39,22 +52,7 @@
             </intent-filter>
 
         </activity>
-        <activity
-            android:name=".activity.SettingsActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="landscape"
-            android:theme="@style/Theme.AppCompat.Light"
-            android:label="@string/str_settings"
-            android:windowSoftInputMode="stateHidden"
-            android:taskAffinity=".SettingsActivity"
-            android:clearTaskOnLaunch="true"
-            android:launchMode="singleTask"
-            >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+
         <activity
             android:name=".activity.PlayerActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
