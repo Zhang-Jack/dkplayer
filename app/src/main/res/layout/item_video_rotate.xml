@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
 
-    <com.angelfish.multiplayer.widget.videoview.RotateIjkVideoView
+    <com.angelfish.videosettings.widget.videoview.RotateIjkVideoView
         android:id="@+id/video_player"
         android:layout_width="match_parent"
         android:layout_height="200dp" />

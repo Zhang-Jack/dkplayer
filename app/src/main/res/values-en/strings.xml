@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">MultiPlayer</string>
+    <string name="app_name">Settings</string>
     <string name="str_api">API</string>
     <string name="str_settings">Settings</string>
     <string name="str_list">LIST</string>

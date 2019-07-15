@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.angelfish.multiplayer.widget.videoview.DefinitionIjkVideoView
+    <com.angelfish.videosettings.widget.videoview.DefinitionIjkVideoView
         android:id="@+id/player"
         android:layout_width="match_parent"
         android:layout_height="250dp" />

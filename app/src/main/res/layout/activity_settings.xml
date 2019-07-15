@@ -5,20 +5,21 @@
     android:weightSum="3"
     android:orientation="vertical">
 
-    <!--TextView
+    <TextView
         android:id="@+id/textSetting"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/str_network_mode"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:visibility="visible"
+        android:textSize="50dp"
         />
 
         <RadioGroup
             android:id="@+id/radioNetwork"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/textSetting"
+            android:layout_centerHorizontal="true"
 
             >
 
@@ -28,6 +29,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/str_radio_www"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textSize="50dp"
                 android:checked="true" />
 
             <RadioButton
@@ -37,9 +39,10 @@
                 android:layout_toRightOf="@id/radioWWW"
                 android:layout_toEndOf="@id/radioWWW"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textSize="50dp"
                 android:text="@string/str_radio_lan" />
 
-        </RadioGroup-->
+        </RadioGroup>
     <TextView
         android:id="@+id/textSetting2"
         android:layout_width="wrap_content"
@@ -48,6 +51,7 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Title"
         android:visibility="visible"
         android:layout_centerHorizontal="true"
+        android:layout_below="@id/radioNetwork"
         android:textSize="50dp"
         />
     <EditText
