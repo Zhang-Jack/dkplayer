@@ -64,4 +64,6 @@
     <string name="str_reset">重置</string>
     <string name="str_apply">设定</string>
     <string name="str_downloaded"> 已下载成功</string>
+    <string name="str_manual_input">手动输入</string>
+    <string name="str_auto_search">自动搜索</string>
 </resources>

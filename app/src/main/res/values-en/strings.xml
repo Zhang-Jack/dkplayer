@@ -44,7 +44,7 @@
     <string name="str_updated_and_no_download">List updated and no download needed!</string>
     <string name="str_connection_error">Connection error, please check your network!</string>
     <string name="str_connecting_server">Connecting server...</string>
-    <string name="str_network_mode">Network Mode</string>
+    <string name="str_network_mode">   Network Mode :  </string>
     <string name="str_radio_www">World Wide Web</string>
     <string name="str_radio_lan">LAN</string>
     <string name="str_server_address">Change server address：</string>
@@ -56,4 +56,6 @@
     <string name="str_reset">Reset</string>
     <string name="str_apply">Apply</string>
     <string name="str_downloaded"> downloaded</string>
+    <string name="str_manual_input">Manual Input</string>
+    <string name="str_auto_search">Auto Search</string>
 </resources>

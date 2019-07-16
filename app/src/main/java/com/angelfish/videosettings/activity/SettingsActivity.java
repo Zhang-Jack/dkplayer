@@ -6,6 +6,9 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -19,15 +22,33 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
+import android.provider.Settings.Secure;
 
+import com.angelfish.videosettings.BuildConfig;
 import com.angelfish.videosettings.R;
+import com.angelfish.videosettings.util.AddressUtils;
+
+import org.apache.http.conn.ConnectTimeoutException;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.lang.reflect.Method;
+import java.net.ConnectException;
+import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
+import java.net.URL;
+import java.util.Calendar;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class SettingsActivity extends AppCompatActivity {
     private Context mContext;
@@ -41,6 +62,9 @@ public class SettingsActivity extends AppCompatActivity {
     private SharedPreferences mSettingsSP;
     private String mSavedAddr = "";
     private String mSavedMode = "";
+    private RadioGroup mRadioNetwork;
+    private RadioGroup mSearchMode;
+    private int mCheckingCount = 0;
 
     private static final String TAG = "MultiPlayer";
     @Override
@@ -59,6 +83,48 @@ public class SettingsActivity extends AppCompatActivity {
         mButtonReset =findViewById(R.id.btn_reset);
         mButtonApply = findViewById(R.id.btn_apply);
         mInputText = findViewById(R.id.textInput);
+        mRadioNetwork = findViewById(R.id.radioNetwork);
+        mSearchMode = findViewById(R.id.searchMode);
+
+
+
+        mRadioNetwork.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener(){
+            public void onCheckedChanged(RadioGroup group, int checkedId)
+            {
+                // This will get the radiobutton that has changed in its check state
+                RadioButton checkedRadioButton = (RadioButton)group.findViewById(checkedId);
+                // This puts the value (true/false) into the variable
+                boolean isChecked = checkedRadioButton.isChecked();
+                // If the radiobutton that has changed in check state is now checked...
+
+                if(checkedId == R.id.radioLAN){
+                    mSearchMode.setVisibility(View.VISIBLE);
+
+                }else{
+                    mSearchMode.setVisibility(View.GONE);
+                }
+            }
+
+        });
+
+        mSearchMode.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener(){
+            public void onCheckedChanged(RadioGroup group, int checkedId)
+            {
+                // This will get the radiobutton that has changed in its check state
+                RadioButton checkedRadioButton = (RadioButton)group.findViewById(checkedId);
+                // This puts the value (true/false) into the variable
+                boolean isChecked = checkedRadioButton.isChecked();
+                // If the radiobutton that has changed in check state is now checked...
+
+                if(checkedId == R.id.autoSearch){
+                    mInputText.setEnabled(false);
+                    startAutoSearch();
+                }else{
+                    mInputText.setEnabled(true);
+                }
+            }
+
+        });
 
         String addrSettingsExtra;
         String modeSettingsExtra;
@@ -101,6 +167,59 @@ public class SettingsActivity extends AppCompatActivity {
         });
 
     }
+    public String getDeviceManufacturer() {
+        String manufacturer = Build.MANUFACTURER;
+        return capitalize(manufacturer);
+
+    }
+
+    public String getDeviceName() {
+        String name = Build.MODEL;
+        return capitalize(name);
+
+    }
+
+    public String getDeviceSerial() {
+        String device_sn = Build.SERIAL;
+        if (Build.VERSION.SDK_INT >= 26) {
+            if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE)
+                    == PackageManager.PERMISSION_GRANTED) {
+                try {
+                    Class<?> c = Class.forName("android.os.SystemProperties");
+                    Method get = c.getMethod("get", String.class);
+                    Log.e(TAG, "before device_sn = "+device_sn);
+
+                    device_sn = (String) get.invoke(c, "gsm.sn1");
+                    if (device_sn.equals(""))
+                        device_sn = (String) get.invoke(c, "ril.serialnumber");
+                    if (device_sn.equals(""))
+                        device_sn = (String) get.invoke(c, "ro.serialno");
+                    if (device_sn.equals(""))
+                        device_sn = (String) get.invoke(c, "sys.serialnumber");
+                    if (device_sn.equals(""))
+                        device_sn = Build.getSerial();
+                    Log.e(TAG, "after device_sn = "+device_sn);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    device_sn = "";
+                }
+            }
+        }
+        return capitalize(device_sn);
+
+    }
+
+    private String capitalize(String s) {
+        if (s == null || s.length() == 0) {
+            return "";
+        }
+        char first = s.charAt(0);
+        if (Character.isUpperCase(first)) {
+            return s;
+        } else {
+            return Character.toUpperCase(first) + s.substring(1);
+        }
+    }
 
     public  boolean isReadStoragePermissionGranted() {
         if (Build.VERSION.SDK_INT >= 23) {
@@ -121,78 +240,186 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
-    public  boolean isWriteStoragePermissionGranted() {
-        if (Build.VERSION.SDK_INT >= 23) {
-            if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    == PackageManager.PERMISSION_GRANTED) {
-                Log.v(TAG,"Permission is granted2");
-                return true;
-            } else {
-
-                Log.v(TAG,"Permission is revoked2");
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 2);
-                return false;
-            }
+    public void startAutoSearch(){
+        String android_id = Secure.getString(mContext.getContentResolver(),
+                Secure.ANDROID_ID);
+        Log.i(TAG, "length of device id ="+android_id);
+        if(android_id.length()==15){
+            android_id = android_id+"0";
         }
-        else { //permission is automatically granted on sdk<23 upon installation
-            Log.v(TAG,"Permission is granted2");
-            return true;
+
+        int versionCode = BuildConfig.VERSION_CODE;
+        String versionName = BuildConfig.VERSION_NAME;
+        int rssi = 0;
+        String IPAddress = AddressUtils.getIPAddress(true);
+        String macAddress = AddressUtils.getMACAddress("wlan0");
+        if(macAddress.equals("")){
+            macAddress = AddressUtils.getMACAddress("eth0");
+
+        }else {
+            WifiManager wifiManager = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
+
+            WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+            rssi = wifiInfo.getRssi();
         }
-    }
+        long timestamp = Calendar.getInstance().getTimeInMillis();
+        String manufacturer = getDeviceManufacturer();
+        String device_name = getDeviceName();
+        String device_sn = getDeviceSerial();
 
-    public void checkInputAndApply(String input){
-        if(input.equals("")){
-            Toast.makeText(mContext, R.string.str_please_input, Toast.LENGTH_LONG).show();
-            return;
-        }else if (!input.startsWith("http://")){
-            Toast.makeText(mContext, R.string.str_start_with_http, Toast.LENGTH_LONG).show();
-            return;
-        }
-        mSavedAddr = input;
-        mSettingsSP.edit().putString(AddressKey, input).apply();
-        saveNewWebsiteToFile(input);
-        AlertDialog alertDialog = new AlertDialog.Builder(SettingsActivity.this).create();
-        alertDialog.setTitle(R.string.str_setting_succeed);
-        alertDialog.setMessage(getString(R.string.str_please_launch_main));
-        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-        alertDialog.show();
+        String partOfIPs = IPAddress.substring(0, IPAddress.lastIndexOf("."));
+        mCheckingCount ++;
+        String localIPandPort = "http://"+partOfIPs+"."+mCheckingCount+":9200/";
+        
+        String checkingIPs = localIPandPort +"/?act=api/device!activate&mac_addr="+macAddress+"&device_id="+android_id+"&version_code="+versionCode+"&version_name="+versionName+"&address="+IPAddress+"&timestamp="+timestamp+"&manufacturer="+manufacturer+"&device_name="+device_name+"&device_sn="+device_sn+"&rssi="+rssi;
+        Log.e(TAG, "checkingIPs = "+checkingIPs);
+        try{
+            URL ativate_link = new URL(checkingIPs);
+            new GetTokenTask().execute(ativate_link);
 
-    }
-    public void saveNewWebsiteToFile(String website){
-        FileOutputStream FoutS = null;
-        OutputStreamWriter outSW = null;
 
-        try {
-            FoutS = new FileOutputStream(new File(Environment.getExternalStorageDirectory()+FileName));
-            outSW = new OutputStreamWriter(FoutS);
-
-            outSW.write(website);
-
-            outSW.flush();
-            // Rest of try block here
-        }catch(Exception ex){
+        }catch(MalformedURLException ex){
             ex.printStackTrace();
-        }finally {
+        }
+    }
+
+    private class GetTokenTask extends AsyncTask<URL, Integer, JSONObject> {
+        protected JSONObject doInBackground(URL... urls) {
+            int count = urls.length;
 
             try {
+                for (int i = 0; i < count; i++) {
+                    OkHttpClient client = new OkHttpClient.Builder()
+                            .retryOnConnectionFailure(false)
+                            .build();
+                    try {
+                        Response response = client.newCall(new Request.Builder()
+                                .url(urls[i])
+                                .build()).execute();
 
-                outSW.close();
+                        String result = response.body().string();
+                        Log.e(TAG, result);
+                        return new JSONObject(result);
+                    } catch (ConnectTimeoutException e) {
+                        Log.e(TAG, "Timeout", e);
+                        startAutoSearch();
+                    } catch (SocketTimeoutException e) {
+//                        Log.e(TAG, " Socket timeout", e);
+                        startAutoSearch();
+                    }catch(ConnectException e){
+                        startAutoSearch();
+                    }
+                    finally {
 
-                FoutS.close();
+                    }
 
-            } catch (IOException e) {
+//                    URLConnection conexion = urls[i].openConnection();
+//                    conexion.setRequestProperty("Connection", "close");
+//                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(conexion.getInputStream()));
+//
+//                    StringBuffer stringBuffer = new StringBuffer();
+//                    String line;
+//                    while ((line = bufferedReader.readLine()) != null)
+//                    {
+//                        stringBuffer.append(line);
+//                    }
 
-                e.printStackTrace();
+//                    return new JSONObject(stringBuffer.toString());
+                }
+            } catch (Exception ex) {
+//                Toast.makeText(mContext, R.string.str_connection_error, Toast.LENGTH_LONG).show();
+                ex.printStackTrace();
+                return null;
+            }
+            return null;
+
+        }
+
+        protected void onProgressUpdate(Integer... progress) {
+//            setProgressPercent(progress[0]);
+        }
+
+        protected void onPostExecute(JSONObject response) {
+
+
+        }
+    }
+
+        public boolean isWriteStoragePermissionGranted() {
+            if (Build.VERSION.SDK_INT >= 23) {
+                if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        == PackageManager.PERMISSION_GRANTED) {
+                    Log.v(TAG, "Permission is granted2");
+                    return true;
+                } else {
+
+                    Log.v(TAG, "Permission is revoked2");
+                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 2);
+                    return false;
+                }
+            } else { //permission is automatically granted on sdk<23 upon installation
+                Log.v(TAG, "Permission is granted2");
+                return true;
+            }
+        }
+
+        public void checkInputAndApply(String input) {
+            if (input.equals("")) {
+                Toast.makeText(mContext, R.string.str_please_input, Toast.LENGTH_LONG).show();
+                return;
+            } else if (!input.startsWith("http://")) {
+                Toast.makeText(mContext, R.string.str_start_with_http, Toast.LENGTH_LONG).show();
+                return;
+            }
+            mSavedAddr = input;
+            mSettingsSP.edit().putString(AddressKey, input).apply();
+            saveNewWebsiteToFile(input);
+            AlertDialog alertDialog = new AlertDialog.Builder(SettingsActivity.this).create();
+            alertDialog.setTitle(R.string.str_setting_succeed);
+            alertDialog.setMessage(getString(R.string.str_please_launch_main));
+            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+            alertDialog.show();
+
+        }
+
+        public void saveNewWebsiteToFile(String website) {
+            FileOutputStream FoutS = null;
+            OutputStreamWriter outSW = null;
+
+            try {
+                FoutS = new FileOutputStream(new File(Environment.getExternalStorageDirectory() + FileName));
+                outSW = new OutputStreamWriter(FoutS);
+
+                outSW.write(website);
+
+                outSW.flush();
+                // Rest of try block here
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            } finally {
+
+                try {
+
+                    outSW.close();
+
+                    FoutS.close();
+
+                } catch (IOException e) {
+
+                    e.printStackTrace();
+
+                }
 
             }
+
 
         }
 
 
-    }
+
 }

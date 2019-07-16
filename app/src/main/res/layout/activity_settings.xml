@@ -5,6 +5,7 @@
     android:weightSum="3"
     android:orientation="vertical">
 
+
     <TextView
         android:id="@+id/textSetting"
         android:layout_width="wrap_content"
@@ -12,7 +13,7 @@
         android:text="@string/str_network_mode"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:visibility="visible"
-        android:textSize="50dp"
+        android:textSize="30dp"
         />
 
         <RadioGroup
@@ -20,6 +21,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
+            android:orientation="horizontal"
+            android:layout_toEndOf="@id/textSetting"
+            android:layout_toRightOf="@id/textSetting"
 
             >
 
@@ -29,7 +33,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/str_radio_www"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                android:textSize="50dp"
+                android:textSize="30dp"
                 android:checked="true" />
 
             <RadioButton
@@ -39,10 +43,42 @@
                 android:layout_toRightOf="@id/radioWWW"
                 android:layout_toEndOf="@id/radioWWW"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                android:textSize="50dp"
+                android:textSize="30dp"
                 android:text="@string/str_radio_lan" />
 
         </RadioGroup>
+
+
+    <RadioGroup
+        android:id="@+id/searchMode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/radioNetwork"
+        android:visibility="gone"
+        android:orientation="horizontal"
+        >
+
+        <RadioButton
+            android:id="@+id/manualInput"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/str_manual_input"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textSize="30dp"
+            android:checked="true" />
+
+        <RadioButton
+            android:id="@+id/autoSearch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/radioWWW"
+            android:layout_toEndOf="@id/radioWWW"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textSize="30dp"
+            android:text="@string/str_auto_search" />
+
+    </RadioGroup>
     <TextView
         android:id="@+id/textSetting2"
         android:layout_width="wrap_content"
@@ -51,7 +87,7 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Title"
         android:visibility="visible"
         android:layout_centerHorizontal="true"
-        android:layout_below="@id/radioNetwork"
+        android:layout_below="@id/searchMode"
         android:textSize="50dp"
         />
     <EditText
