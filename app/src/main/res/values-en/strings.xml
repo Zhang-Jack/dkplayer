@@ -58,4 +58,8 @@
     <string name="str_downloaded"> downloaded</string>
     <string name="str_manual_input">Manual Input</string>
     <string name="str_auto_search">Auto Search</string>
+    <string name="str_searching">Searching...</string>
+    <string name="str_search_finished">Search finished!</string>
+    <string name="str_no_server_found">No available server found!\nPlease check your network connection \nor input your server IP manually!</string>
+    <string name="str_server_found">Available server found!\n Press APPLY button to save it to your device.</string>
 </resources>

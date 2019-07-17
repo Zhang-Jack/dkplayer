@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity{
     private Context mContext;
     private boolean mIsWritingPermitted = false;
     private boolean mIsReadingPermitted = false;
-//    private boolean mIsReadPhoneStatePermitted = false;
+    private boolean mIsReadPhoneStatePermitted = false;
     private TelephonyManager mTelephonyManager;
 
 
@@ -127,7 +127,10 @@ public class MainActivity extends AppCompatActivity{
             mIsReadingPermitted = true;
             isPermitted = true;
         }
+        if(mIsReadingPermitted == true){
+            isReadPhoneStateGranted();
 
+        }
         return isPermitted;
     }
 
@@ -167,7 +170,7 @@ public class MainActivity extends AppCompatActivity{
                     == PackageManager.PERMISSION_GRANTED) {
                 Log.v(TAG,"Permission is granted2");
 //                mESN_Number = mTelephonyManager.getDeviceId();
-//                mIsReadPhoneStatePermitted = true;
+                mIsReadPhoneStatePermitted = true;
                 isPermitted = true;
             } else {
 
@@ -179,7 +182,7 @@ public class MainActivity extends AppCompatActivity{
         else { //permission is automatically granted on sdk<23 upon installation
             Log.v(TAG,"Permission is granted2");
 //            mESN_Number = mTelephonyManager.getDeviceId();
-//            mIsReadPhoneStatePermitted = true;
+            mIsReadPhoneStatePermitted = true;
             isPermitted  =true;
         }
 
@@ -217,19 +220,35 @@ public class MainActivity extends AppCompatActivity{
                     Log.v(TAG,"Permission: "+permissions[0]+ "was "+grantResults[0]);
                     //resume tasks needing this permission
                     mIsReadingPermitted = true;
-//                    isReadPhoneStateGranted();
-                    checkPermissionsAndStartIntent();
+                    isReadPhoneStateGranted();
+//                    checkPermissionsAndStartIntent();
                 }else{
                     finish();
                 }
                 break;
 
-
+            case 4:
+                Log.d(TAG, "Read Phone State");
+                if(grantResults[0]== PackageManager.PERMISSION_GRANTED){
+                    Log.v(TAG,"Permission: "+permissions[0]+ "was "+grantResults[0]);
+                    //resume tasks needing this permission
+                    if (Build.VERSION.SDK_INT >= 23) {
+                        if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE)
+                                == PackageManager.PERMISSION_GRANTED) {
+//                            mESN_Number = mTelephonyManager.getDeviceId();
+                            mIsReadPhoneStatePermitted = true;
+                            checkPermissionsAndStartIntent();
+                        }
+                    }
+                }else{
+                    finish();
+                }
+                break;
         }
     }
 
     public void checkPermissionsAndStartIntent(){
-        if(mIsReadingPermitted && mIsWritingPermitted){
+        if(mIsReadPhoneStatePermitted && mIsReadingPermitted && mIsWritingPermitted){
             Intent startPlayer = new Intent();
             startPlayer.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startPlayer.setClass(mContext, SettingsActivity.class);

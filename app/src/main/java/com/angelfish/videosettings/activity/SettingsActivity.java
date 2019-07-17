@@ -1,6 +1,7 @@
 package com.angelfish.videosettings.activity;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -12,6 +13,8 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
@@ -44,6 +47,7 @@ import java.net.ConnectException;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.Calendar;
 
 import okhttp3.OkHttpClient;
@@ -65,8 +69,33 @@ public class SettingsActivity extends AppCompatActivity {
     private RadioGroup mRadioNetwork;
     private RadioGroup mSearchMode;
     private int mCheckingCount = 0;
+    private String mLocalIPandPort = "";
+    private boolean mIsSearching = false;
+    private ProgressDialog mProgresssDialog;
 
     private static final String TAG = "MultiPlayer";
+
+    private final static int DO_UPDATE_TEXT = 0;
+    private final static int FINISH_NOT_FOUND = 1;
+    private final static int SERVER_FOUND = 2;
+    private final Handler myHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            final int what = msg.what;
+            switch(what) {
+                case DO_UPDATE_TEXT:
+                    doUpdate();
+                    break;
+                case FINISH_NOT_FOUND:
+                    finishSearching();
+                    showNoServerFound();
+                    break;
+                case SERVER_FOUND:
+                    finishSearching();
+                    showServerFound();
+            }
+        }
+    };
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -167,6 +196,57 @@ public class SettingsActivity extends AppCompatActivity {
         });
 
     }
+
+    public void doUpdate(){
+        if(mInputText!= null && mCheckingCount > 0){
+            mInputText.setText(mLocalIPandPort);
+        }
+        if(mIsSearching == false){
+            mProgresssDialog = new ProgressDialog(SettingsActivity.this);
+            mProgresssDialog.setMessage(getString(R.string.str_searching));
+            mProgresssDialog.setCanceledOnTouchOutside(false);
+            mProgresssDialog.show();
+            mIsSearching = true;
+        }
+    }
+
+    public void finishSearching(){
+        if(mInputText!= null && mCheckingCount > 0){
+            mInputText.setEnabled(true);
+            mCheckingCount = 0;
+        }
+        if(mProgresssDialog!=null && mIsSearching == true){
+            mProgresssDialog.dismiss();
+            mIsSearching = false;
+        }
+    }
+
+    public void showNoServerFound(){
+        AlertDialog alertDialog = new AlertDialog.Builder(SettingsActivity.this).create();
+        alertDialog.setTitle(R.string.str_search_finished);
+        alertDialog.setMessage(getString(R.string.str_no_server_found));
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.show();
+    }
+
+    public void showServerFound(){
+        AlertDialog alertDialog = new AlertDialog.Builder(SettingsActivity.this).create();
+        alertDialog.setTitle(R.string.str_search_finished);
+        alertDialog.setMessage(getString(R.string.str_server_found));
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.show();
+    }
+
     public String getDeviceManufacturer() {
         String manufacturer = Build.MANUFACTURER;
         return capitalize(manufacturer);
@@ -269,9 +349,9 @@ public class SettingsActivity extends AppCompatActivity {
 
         String partOfIPs = IPAddress.substring(0, IPAddress.lastIndexOf("."));
         mCheckingCount ++;
-        String localIPandPort = "http://"+partOfIPs+"."+mCheckingCount+":9200/";
-        
-        String checkingIPs = localIPandPort +"/?act=api/device!activate&mac_addr="+macAddress+"&device_id="+android_id+"&version_code="+versionCode+"&version_name="+versionName+"&address="+IPAddress+"&timestamp="+timestamp+"&manufacturer="+manufacturer+"&device_name="+device_name+"&device_sn="+device_sn+"&rssi="+rssi;
+        mLocalIPandPort = "http://"+partOfIPs+"."+mCheckingCount+":9200/";
+        myHandler.sendEmptyMessage(DO_UPDATE_TEXT);
+        String checkingIPs = mLocalIPandPort +"/?act=api/device!activate&mac_addr="+macAddress+"&device_id="+android_id+"&version_code="+versionCode+"&version_name="+versionName+"&address="+IPAddress+"&timestamp="+timestamp+"&manufacturer="+manufacturer+"&device_name="+device_name+"&device_sn="+device_sn+"&rssi="+rssi;
         Log.e(TAG, "checkingIPs = "+checkingIPs);
         try{
             URL ativate_link = new URL(checkingIPs);
@@ -302,12 +382,32 @@ public class SettingsActivity extends AppCompatActivity {
                         return new JSONObject(result);
                     } catch (ConnectTimeoutException e) {
                         Log.e(TAG, "Timeout", e);
-                        startAutoSearch();
+                        if(mCheckingCount<255) {
+                            startAutoSearch();
+                        }else{
+                            Log.e(TAG, "Check finished, no server found!");
+                        }
                     } catch (SocketTimeoutException e) {
-//                        Log.e(TAG, " Socket timeout", e);
-                        startAutoSearch();
+                        if(mCheckingCount<255) {
+                            startAutoSearch();
+                        }else{
+                            myHandler.sendEmptyMessage(FINISH_NOT_FOUND);
+                            Log.e(TAG, "Check finished, no server found!");
+                        }
                     }catch(ConnectException e){
-                        startAutoSearch();
+                        if(mCheckingCount<255) {
+                            startAutoSearch();
+                        }else{
+                            myHandler.sendEmptyMessage(FINISH_NOT_FOUND);
+                            Log.e(TAG, "Check finished, no server found!");
+                        }
+                    }catch(UnknownHostException e){
+                        if(mCheckingCount<255) {
+                            startAutoSearch();
+                        }else{
+                            myHandler.sendEmptyMessage(FINISH_NOT_FOUND);
+                            Log.e(TAG, "Check finished, no server found!");
+                        }
                     }
                     finally {
 
@@ -340,7 +440,9 @@ public class SettingsActivity extends AppCompatActivity {
         }
 
         protected void onPostExecute(JSONObject response) {
-
+            if(response!=null){
+                myHandler.sendEmptyMessage(SERVER_FOUND);
+            }
 
         }
     }
