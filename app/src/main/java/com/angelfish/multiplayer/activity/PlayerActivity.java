@@ -97,6 +97,7 @@ public class PlayerActivity extends AppCompatActivity{
     private int mPlayer_index1 = 0;
 
     private boolean mTheFirstTimeRunning = true;
+    private boolean mTheFirstShowToast = true;
     private int mDownloadFilesCount = 0;
 
 
@@ -995,6 +996,7 @@ public class PlayerActivity extends AppCompatActivity{
                                 Toast.makeText(mContext, R.string.str_start_downloading, Toast.LENGTH_SHORT).show();
                             }
                             mDownloadFilesCount++;
+                            mTheFirstShowToast = true;
                             try {
                                 URL downlaod_url = new URL(remote_url);
                                 new DownloadFilesTask().execute(downlaod_url);
@@ -1006,7 +1008,10 @@ public class PlayerActivity extends AppCompatActivity{
                     }
                     Log.e(TAG, "Success: " + video_info );
                     if(mDownloadFilesCount == 0){
-                        Toast.makeText(mContext, R.string.str_updated_and_no_download, Toast.LENGTH_SHORT).show();
+                        if(mTheFirstShowToast == true) {
+                            Toast.makeText(mContext, R.string.str_updated_and_no_download, Toast.LENGTH_SHORT).show();
+                            mTheFirstShowToast = false;
+                        }
                         checkDeleteFiles();
                     }
 
