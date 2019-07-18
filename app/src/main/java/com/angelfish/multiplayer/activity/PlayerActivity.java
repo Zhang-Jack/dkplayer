@@ -18,6 +18,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Message;
 import android.os.PowerManager;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresPermission;
@@ -60,10 +61,13 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.lang.reflect.Method;
+import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.UnknownHostException;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -76,6 +80,7 @@ import okhttp3.Response;
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 import android.provider.Settings.Secure;
 
+import org.apache.http.conn.ConnectTimeoutException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -99,6 +104,9 @@ public class PlayerActivity extends AppCompatActivity{
     private boolean mTheFirstTimeRunning = true;
     private boolean mTheFirstShowToast = true;
     private int mDownloadFilesCount = 0;
+    private boolean mIsServerNotFound = false;
+    private int mCheckingCount = 0;
+    private int mServerLocation = 0; //0 for www, 1 for lan
 
 
     private String VOD_URL_1 = "";
@@ -123,6 +131,34 @@ public class PlayerActivity extends AppCompatActivity{
     private int mFilesInWebFolder = 0;
     private int mFilesInLocalFolder = 0;
     private int mUpdateInterval = UPDATE_INTERVAL;
+    private final static int DO_UPDATE_TEXT = 0;
+    private final static int FINISH_NOT_FOUND = 1;
+    private final static int SERVER_FOUND = 2;
+    private final Handler myHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            final int what = msg.what;
+            switch(what) {
+                case DO_UPDATE_TEXT:
+//                    doUpdate();
+                    break;
+                case FINISH_NOT_FOUND:
+//                    finishSearching();
+//                    showNoServerFound();
+                    Toast.makeText(mContext,getString(R.string.str_no_server_found), Toast.LENGTH_SHORT).show();
+
+                    mCheckingCount = 0;
+                    BASE_URL = "http://projector.auong.com/";
+                    break;
+                case SERVER_FOUND:
+//                    finishSearching();
+//                    showServerFound();
+//                    Toast.makeText(mContext,getString(R.string.str_server_found), Toast.LENGTH_SHORT).show();
+                    mCheckingCount = 0;
+                    checkNeedToUpdateServerAddress();
+
+            }
+        }
+    };
 
 
     @Override
@@ -150,6 +186,9 @@ public class PlayerActivity extends AppCompatActivity{
         String addrFromFile = readStringFromFile();
         if(!addrFromFile.equals("")){
             BASE_URL = addrFromFile;
+            if(!BASE_URL.contains("projector")){
+                mServerLocation = 1;
+            }
         }
 
         String modePref = mSettingsSP.getString(ModeKey, "");
@@ -205,6 +244,13 @@ public class PlayerActivity extends AppCompatActivity{
             }
         }
     }
+    public void checkNeedToUpdateServerAddress(){
+        String old_address = readStringFromFile();
+        if(!old_address.equals(BASE_URL)){
+            saveNewWebsiteToFile(BASE_URL);
+        }
+    }
+
 
     public String readStringFromFile(){
         String webSite = "";
@@ -737,6 +783,12 @@ public class PlayerActivity extends AppCompatActivity{
         String manufacturer = getDeviceManufacturer();
         String device_name = getDeviceName();
         String device_sn = getDeviceSerial();
+        if(mIsServerNotFound) {
+            String partOfIPs = IPAddress.substring(0, IPAddress.lastIndexOf("."));
+            mCheckingCount++;
+            BASE_URL = "http://" + partOfIPs + "." + mCheckingCount + ":9200/";
+        }
+        myHandler.sendEmptyMessage(DO_UPDATE_TEXT);
         String ativate_string = BASE_URL+"/?act=api/device!activate&mac_addr="+macAddress+"&device_id="+android_id+"&version_code="+versionCode+"&version_name="+versionName+"&address="+IPAddress+"&timestamp="+timestamp+"&manufacturer="+manufacturer+"&device_name="+device_name+"&device_sn="+device_sn+"&rssi="+rssi;
         Log.e(TAG, ativate_string);
         try{
@@ -849,15 +901,47 @@ public class PlayerActivity extends AppCompatActivity{
                     OkHttpClient client = new OkHttpClient.Builder()
                             .retryOnConnectionFailure(false)
                             .build();
-                    Response response = client.newCall(new Request.Builder()
-                            .url(urls[i])
-                            .build()).execute();
-                    try{
+                    try {
+                        Response response = client.newCall(new Request.Builder()
+                                .url(urls[i])
+                                .build()).execute();
+
                         String result = response.body().string();
                         Log.e(TAG, result);
                         return new JSONObject(result);
-                    }finally {
-                        response.close();
+                    } catch (ConnectTimeoutException e) {
+                        Log.e(TAG, "Timeout", e);
+                        if(mCheckingCount<255) {
+                            mIsServerNotFound = true;
+                            checkForUpdateAds();
+                        }else{
+                            Log.e(TAG, "Check finished, no server found!");
+                        }
+                    } catch (SocketTimeoutException e) {
+                        if(mCheckingCount<255) {
+                            mIsServerNotFound = true;
+                            checkForUpdateAds();
+                        }else{
+                            myHandler.sendEmptyMessage(FINISH_NOT_FOUND);
+                            Log.e(TAG, "Check finished, no server found!");
+                        }
+                    }catch(ConnectException e){
+                        if(mCheckingCount<255) {
+                            mIsServerNotFound = true;
+                            checkForUpdateAds();
+                        }else{
+                            myHandler.sendEmptyMessage(FINISH_NOT_FOUND);
+                            Log.e(TAG, "Check finished, no server found!");
+                        }
+                    }catch(UnknownHostException e){
+                        if(mCheckingCount<255) {
+                            checkForUpdateAds();
+                        }else{
+                            myHandler.sendEmptyMessage(FINISH_NOT_FOUND);
+                            Log.e(TAG, "Check finished, no server found!");
+                        }
+                    }
+                    finally {
 
                     }
 
@@ -891,12 +975,16 @@ public class PlayerActivity extends AppCompatActivity{
 //            showDialog("Downloaded " + result + " bytes");
             if(response != null)
             {
+                mIsServerNotFound = false;
+				myHandler.sendEmptyMessage(SERVER_FOUND);
                 try {
                     String token = response.getString("token");
                     String resource_string = BASE_URL+"/?act=api/resource&type="+type+"&token="+token;
                     String remote_url = response.getString("url")+"/";
 //                    mSettingsSP.edit().putString(AddressKey, remote_url).apply();
-                    saveNewWebsiteToFile(remote_url);
+                    if(mServerLocation == 0) {
+                        saveNewWebsiteToFile(remote_url);
+                    }
                     String play_mode = response.getString("play_order");
                     setPlayMode(play_mode);
                     mUpdateInterval = response.getInt("heartbeat");

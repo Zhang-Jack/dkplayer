@@ -64,4 +64,10 @@
     <string name="str_reset">重置</string>
     <string name="str_apply">设定</string>
     <string name="str_downloaded"> 已下载成功</string>
+    <string name="str_manual_input">手动输入</string>
+    <string name="str_auto_search">自动搜索</string>
+    <string name="str_searching">搜索中。。。</string>
+    <string name="str_search_finished">搜索已完成!</string>
+    <string name="str_no_server_found">服务器未连接!\n请检查设备的网络连接 \n或手动输入服务器IP地址</string>
+    <string name="str_server_found">已连接可用服务器!\n 请点击“设定”按钮保存该服务器地址</string>
 </resources>
